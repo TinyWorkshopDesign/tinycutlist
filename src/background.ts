@@ -10,7 +10,7 @@ import { countParts, type CountOptions, type CutList } from "./cutlist/count.ts"
 
 export type Handler<P, R> = (host: Host, params: P) => Promise<R>;
 
-/** Contributed commands, keyed by the ids in hew-plugin.json (`org.opencutlist.<id>` on the bus). */
+/** Contributed commands, keyed by the ids in hew-plugin.json (`io.github.tinyworkshopdesign.tinycutlist.<id>` on the bus). */
 export const commands = {
   count_parts: (async (host, params) => countParts(host, params)) as Handler<CountOptions, CutList>,
 };

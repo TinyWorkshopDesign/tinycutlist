@@ -82,7 +82,7 @@ export const CASES: Case[] = [
     async run(hew) {
       const side = await board(hew, "Side", [0, 0, 0], BOARD);
       const cmp = await hew.one("hew.component.create", { members: [side] });
-      await hew.one("hew.attr.set", { target: cmp.component, ns: "org.opencutlist", key: "grain", value: "length" });
+      await hew.one("hew.attr.set", { target: cmp.component, ns: "io.github.tinyworkshopdesign.tinycutlist", key: "grain", value: "length" });
       const made = await api.copy(hew, [cmp.instance], [0, 1, 0], 2);
       await hew.one("hew.component.make_unique", { instance: made.ids[0] });
       // count by placement, not by name: the copied solid's name isn't kept (see note)
@@ -92,7 +92,7 @@ export const CASES: Case[] = [
       const lone = rows.find((r) => r.path[0] === made.ids[0])!;
       const notes: string[] = [];
       if (lone.name !== "Side") notes.push(`the unique copy's solid lost its name ("Side" → ${JSON.stringify(lone.name)})`);
-      const attrs = JSON.stringify(await hew.query("hew.attr.get", { target: await definitionOf(hew, lone), ns: "org.opencutlist" }));
+      const attrs = JSON.stringify(await hew.query("hew.attr.get", { target: await definitionOf(hew, lone), ns: "io.github.tinyworkshopdesign.tinycutlist" }));
       if (!attrs.includes("length")) notes.push("the new definition didn't keep the definition's attributes");
       return notes.length ? `note for M2 (make_unique must keep these): ${notes.join("; ")}` : "name and attributes kept";
     },
@@ -253,14 +253,14 @@ export const CASES: Case[] = [
       await api.copy(hew, [b], [0, 1, 0], 2);
       const { rows } = await expectLinked(hew, "Shelf", 3);
       const def = await definitionOf(hew, rows[0]);
-      await hew.one("hew.attr.set", { target: def, ns: "org.opencutlist", key: "grain", value: "length" });
+      await hew.one("hew.attr.set", { target: def, ns: "io.github.tinyworkshopdesign.tinycutlist", key: "grain", value: "length" });
       const res = await api.unlink(hew, loc(rows[2]));
       expect(res && Object.keys(res).length > 0, "unlink should return the new ids (remap)");
       const all = (await hew.occurrences()).filter((r) => r.kind === "object");
       const lone = all.find((r) => r.path.length && all.filter((x) => x.id === r.id).length === 1)!;
       expect(lone, "can't find the unlinked copy");
       expect(lone.name === "Shelf", `the unlinked copy lost its name ("Shelf" → ${JSON.stringify(lone.name)})`);
-      const attrs = await hew.query("hew.attr.get", { target: await definitionOf(hew, lone), ns: "org.opencutlist" });
+      const attrs = await hew.query("hew.attr.get", { target: await definitionOf(hew, lone), ns: "io.github.tinyworkshopdesign.tinycutlist" });
       expect(JSON.stringify(attrs).includes("length"), "the unlinked copy lost the definition's attributes");
     },
   },
@@ -288,19 +288,19 @@ export const CASES: Case[] = [
       expect(inst.every(Boolean), "linked placements should each have an instance above the solid");
       await hew.one("hew.entity.rename", { id: inst[0], name: "Left door" });
       await hew.one("hew.material.paint", { id: inst[1], material: red });
-      await hew.one("hew.attr.set", { target: inst[2], ns: "org.opencutlist", key: "is_grain_group", value: true });
+      await hew.one("hew.attr.set", { target: inst[2], ns: "io.github.tinyworkshopdesign.tinycutlist", key: "is_grain_group", value: true });
       const def = await definitionOf(hew, rows[0]);
-      await hew.one("hew.attr.set", { target: def, ns: "org.opencutlist", key: "role", value: "front_panel" });
+      await hew.one("hew.attr.set", { target: def, ns: "io.github.tinyworkshopdesign.tinycutlist", key: "role", value: "front_panel" });
       await expectLinked(hew, "Door", 3); // none of that splits the link
       const all = await hew.occurrences();
       const byId = (id: string) => all.find((r) => r.id === id)!;
       expect(byId(inst[0]).name === "Left door" && byId(inst[1]).name !== "Left door", "name should be per placement");
       expect(byId(inst[1]).material === red && byId(inst[0]).material !== red, "material should be per placement");
-      const a2 = JSON.stringify(await hew.query("hew.attr.get", { target: inst[2], ns: "org.opencutlist" }));
-      const a0 = JSON.stringify(await hew.query("hew.attr.get", { target: inst[0], ns: "org.opencutlist" }));
+      const a2 = JSON.stringify(await hew.query("hew.attr.get", { target: inst[2], ns: "io.github.tinyworkshopdesign.tinycutlist" }));
+      const a0 = JSON.stringify(await hew.query("hew.attr.get", { target: inst[0], ns: "io.github.tinyworkshopdesign.tinycutlist" }));
       expect(a2.includes("is_grain_group") && !a0.includes("is_grain_group"), "placement attributes should not leak");
       for (const r of rows) {
-        const d = JSON.stringify(await hew.query("hew.attr.get", { target: await definitionOf(hew, r), ns: "org.opencutlist" }));
+        const d = JSON.stringify(await hew.query("hew.attr.get", { target: await definitionOf(hew, r), ns: "io.github.tinyworkshopdesign.tinycutlist" }));
         expect(d.includes("front_panel"), "definition attributes should reach every copy");
       }
     },
@@ -344,7 +344,7 @@ export const CASES: Case[] = [
       const b = await board(hew, "Shelf", [0, 0, 0], BOARD);
       await api.copy(hew, [b], [0, 1, 0], 2);
       await expectLinked(hew, "Shelf", 3);
-      const file = `${process.env.OCL_TMP ?? "/tmp"}/ocl-l14-${process.pid}.hew`;
+      const file = `${process.env.TCL_TMP ?? "/tmp"}/tcl-l14-${process.pid}.hew`;
       await hew.one("hew.doc.save", { path: file });
       const again = await Hew.start();
       try {

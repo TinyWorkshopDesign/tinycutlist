@@ -1,14 +1,14 @@
 // Material types, as in OpenCutList. The type is our attribute on the material
-// (namespace `org.opencutlist`, key `type`), else an optional name → type map.
+// (namespace `io.github.tinyworkshopdesign.tinycutlist`, key `type`), else an optional name → type map.
 
 import type { Host } from "../host/host.ts";
 
-export const NS = "org.opencutlist";
+export const NS = "io.github.tinyworkshopdesign.tinycutlist";
 
 export type MaterialType =
   | "solid_wood" | "sheet_good" | "dimensional" | "edge" | "hardware" | "veneer" | "machining" | "unknown";
 
-/** Boris's order, used to break ties when a part's faces vote for its material. */
+/** OpenCutList's order, used to break ties when a part's faces vote for its material. */
 export const TYPE_ORDER: MaterialType[] = [
   "solid_wood", "sheet_good", "dimensional", "hardware", "edge", "veneer", "machining", "unknown",
 ];

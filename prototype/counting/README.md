@@ -1,6 +1,8 @@
 # Prototype: counting parts over `occurrences`
 
-> **Status: run on the M2 pre-release (`v1.5.0-pre.plugin-m2`) with the real M2 reads (`OCL_M2_READS=1`), 12 November 2026.** The synthetic cases pass, and on five real models the cut lists are identical to a run with the simulated reads. See "Results on M2" below. Linked copies in the synthetic cases are still built as explicit components; the acceptance test (#2) covers real linked copies.
+> Written while this project was a port of OpenCutList (October–November 2026); it is now part of TinyCutList. References like "#1", "#2" or "#3" point to pull requests on `lairdubois/lairdubois-opencutlist-hew-extension`.
+
+> **Status: run on the M2 pre-release (`v1.5.0-pre.plugin-m2`) with the real M2 reads (`TCL_M2_READS=1`), 12 November 2026.** The synthetic cases pass, and on five real models the cut lists are identical to a run with the simulated reads. See "Results on M2" below. Linked copies in the synthetic cases are still built as explicit components; the acceptance test (#2) covers real linked copies.
 
 The counting logic of OpenCutList for Hew, as settled in the concept mapping 0.4 ([#1](https://github.com/lairdubois/lairdubois-opencutlist-hew-extension/pull/1), §1 and §2), written in TypeScript over Hew's bus and run on milestone 1. It's the second thing I offered @granroth on hew3d/hew#60, next to the acceptance test for linked copies (#2).
 
@@ -19,13 +21,13 @@ The counting logic of OpenCutList for Hew, as settled in the concept mapping 0.4
 - **Material**: Boris's order. The placement's own material (not edge or veneer), else votes over its own solids' faces (one per face, ties by type order), else the inherited one.
 - **Look-alike rows**: different definitions with the same material, size and mirroring are reported as candidates for Hew's "link them?" suggestion. They're never merged.
 
-Material types are read from our attribute on the material (`org.opencutlist` / `type`), or from an optional name → type map.
+Material types are read from our attribute on the material (`io.github.tinyworkshopdesign.tinycutlist` / `type`), or from an optional name → type map.
 
 ## M2 reads and their M1 simulations
 
-`OCL_M2_READS=1` uses the real M2 reads (switch and code by granroth). Without it, the prototype derives them from what M1 has, so both paths stay runnable side by side:
+`TCL_M2_READS=1` uses the real M2 reads (switch and code by granroth). Without it, the prototype derives them from what M1 has, so both paths stay runnable side by side:
 
-| Read | M2 (`OCL_M2_READS=1`) | Simulated on M1 with |
+| Read | M2 (`TCL_M2_READS=1`) | Simulated on M1 with |
 |---|---|---|
 | `members` | `members` on instance and group rows. Groups are transparent: their objects and instances count toward the enclosing container. **`path` holds instances only**: a group's members have the group's own `path`, and `parent` names the group. | `path` and `parent`: an object's container is the last instance on its path |
 | `solid` | `solid` (and `family` for a split shape) on object rows | `hew.doc.health`, which lists the objects that aren't closed |
@@ -38,7 +40,7 @@ Needs Node ≥ 23 and a milestone 1 (or later) `hew-cli`; the M2 reads need the 
 ```bash
 HEW_CLI=/path/to/hew-cli node synthetic.ts             # the synthetic cases below
 HEW_CLI=… node corpus.ts [--out dir] model.skp …       # real models, opened read-only in a headless session
-OCL_M2_READS=1 HEW_CLI=… node synthetic.ts              # the same, on the real M2 reads
+TCL_M2_READS=1 HEW_CLI=… node synthetic.ts              # the same, on the real M2 reads
 ```
 
 ## Synthetic cases (pass on M1 with simulated reads, and on M2 with the real reads)

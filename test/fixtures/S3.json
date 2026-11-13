@@ -1227,7 +1227,7 @@
    "method": "hew.attr.get",
    "params": {
     "target": "cmp_2",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {}
   },
@@ -1935,10 +1935,10 @@
    "method": "hew.attr.get",
    "params": {
     "target": "cmp_7",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {
-    "org.opencutlist": {
+    "io.github.tinyworkshopdesign.tinycutlist": {
      "symmetrical": true
     }
    }

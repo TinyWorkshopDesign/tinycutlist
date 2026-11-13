@@ -822,10 +822,10 @@
    "method": "hew.attr.get",
    "params": {
     "target": "mat_0",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {
-    "org.opencutlist": {
+    "io.github.tinyworkshopdesign.tinycutlist": {
      "type": "hardware"
     }
    }
@@ -834,10 +834,10 @@
    "method": "hew.attr.get",
    "params": {
     "target": "mat_1",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {
-    "org.opencutlist": {
+    "io.github.tinyworkshopdesign.tinycutlist": {
      "type": "machining"
     }
    }
@@ -846,10 +846,10 @@
    "method": "hew.attr.get",
    "params": {
     "target": "mat_2",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {
-    "org.opencutlist": {
+    "io.github.tinyworkshopdesign.tinycutlist": {
      "type": "sheet_good"
     }
    }

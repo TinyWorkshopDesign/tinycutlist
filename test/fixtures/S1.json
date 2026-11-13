@@ -529,10 +529,10 @@
    "method": "hew.attr.get",
    "params": {
     "target": "mat_0",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {
-    "org.opencutlist": {
+    "io.github.tinyworkshopdesign.tinycutlist": {
      "type": "sheet_good"
     }
    }
@@ -541,10 +541,10 @@
    "method": "hew.attr.get",
    "params": {
     "target": "mat_1",
-    "ns": "org.opencutlist"
+    "ns": "io.github.tinyworkshopdesign.tinycutlist"
    },
    "result": {
-    "org.opencutlist": {
+    "io.github.tinyworkshopdesign.tinycutlist": {
      "type": "solid_wood"
     }
    }

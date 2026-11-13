@@ -25,10 +25,10 @@ const TYPE_ORDER: MaterialType[] = [
   "solid_wood", "sheet_good", "dimensional", "hardware", "edge", "veneer", "machining", "unknown",
 ];
 const VIRTUAL = new Set<MaterialType>(["edge", "veneer"]);
-export const NS = "org.opencutlist";
+export const NS = "io.github.tinyworkshopdesign.tinycutlist";
 
-/** OCL_M2_READS=1 uses the M2 reads (`members`, `solid`, `scope: "own"`) instead of the M1 simulations. */
-const M2 = process.env.OCL_M2_READS === "1";
+/** TCL_M2_READS=1 uses the M2 reads (`members`, `solid`, `scope: "own"`) instead of the M1 simulations. */
+const M2 = process.env.TCL_M2_READS === "1";
 export { M2 };
 
 export type Options = {

@@ -61,7 +61,7 @@ export class Hew {
     await hew.request("initialize", {
       protocolVersion: "2025-06-18",
       capabilities: {},
-      clientInfo: { name: "ocl-acceptance", version: "0.1" },
+      clientInfo: { name: "tinycutlist-acceptance", version: "0.1" },
     });
     hew.proc.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
     return hew;

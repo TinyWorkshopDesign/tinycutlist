@@ -1,5 +1,6 @@
-// Part counting over Hew's `occurrences`, following the part model settled in
-// the concept mapping 0.4 (#1, §1 and §2):
+// Part counting over Hew's `occurrences`, following the part model written
+// down in docs/concept-mapping.md (§1 and §2). This is the component-based
+// rule; the planned change to "a part is a closed solid" is in the README.
 //
 //   - Hew reports facts, the plugin applies the rule.
 //   - A part is any component placement with solids of its own, at any depth,
@@ -9,7 +10,7 @@
 //     too), split on material, size and mirroring (unless `symmetrical`).
 //   - Hardware (a placement painted with a hardware material) is one item;
 //     machining bodies are left out of the size; open objects are reported.
-//   - Loose objects (no definition): still Boris's call. Listed as a part
+//   - Loose objects (no definition, never copied): listed as a part
 //     placed once unless `loose: false`.
 
 import type { Host } from "../host/host.ts";
@@ -119,7 +120,7 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
     return faceCache.get(k)!;
   }
 
-  // Boris's order: the placement's own material (not edge or veneer), else votes over its own solids' faces, else inherited
+  // OpenCutList's order: the placement's own material (not edge or veneer), else votes over its own solids' faces, else inherited
   async function partMaterial(c: Occurrence, solids: Occurrence[]): Promise<string | null> {
     if (c.material && !VIRTUAL.has(materials.type(c.material))) return c.material;
     const votes = new Map<string, number>();
@@ -225,7 +226,7 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
     p.placements.push(locator(c));
   }
 
-  // loose objects: no definition (Boris's call; listed as a part placed once)
+  // loose objects: no definition (listed as a part placed once)
   if (loose) {
     for (const o of rows) {
       if (o.kind !== "object" || o.path.length || materials.type(o.material) === "machining") continue;

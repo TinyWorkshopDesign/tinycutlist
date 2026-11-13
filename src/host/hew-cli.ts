@@ -42,7 +42,7 @@ export class HewCliHost implements Host {
     await host.request("initialize", {
       protocolVersion: "2025-06-18",
       capabilities: {},
-      clientInfo: { name: "opencutlist-hew", version: "0.0.0" },
+      clientInfo: { name: "tinycutlist", version: "0.0.0" },
     });
     host.proc.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
     return host;

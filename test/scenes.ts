@@ -133,7 +133,7 @@ export const SCENES: Scene[] = [
       await one(host, "hew.tag.create", { path: ["Spare"] });
       await one(host, "hew.tag.assign", { id: hidden.instance, path: ["Spare"] });
       await one(host, "hew.tag.set_visible", { path: ["Spare"], visible: false });
-      // a loose board, never copied (Boris's call: listed as a part placed once)
+      // a loose board, never copied (listed as a part placed once)
       await board(host, "Loose top", [4, 0, 0], [0.8, 0.4, 0.025], ply);
     },
     check(res) {

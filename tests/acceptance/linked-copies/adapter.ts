@@ -8,17 +8,17 @@
 import type { Hew } from "./hew.ts";
 
 /**
- * OCL_SIMULATE_LINKS=1 checks the cases themselves on a build without linked
+ * TCL_SIMULATE_LINKS=1 checks the cases themselves on a build without linked
  * copies (M1): before a copy gesture, each loose object or group is folded
  * into a component, which is what M2 is expected to do implicitly. Off by
  * default: an acceptance run must test the real gesture.
  */
-const SIMULATE = process.env.OCL_SIMULATE_LINKS === "1";
+const SIMULATE = process.env.TCL_SIMULATE_LINKS === "1";
 
 export { SIMULATE };
 
 /**
- * Runs a copy gesture. With OCL_SIMULATE_LINKS=1, loose objects and groups are
+ * Runs a copy gesture. With TCL_SIMULATE_LINKS=1, loose objects and groups are
  * first folded into components in the SAME transaction, so the gesture stays
  * one undo step, as M2's implicit linking is expected to be.
  */

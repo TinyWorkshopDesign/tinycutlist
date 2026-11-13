@@ -1,5 +1,7 @@
 # Acceptance test: linked copies (Hew milestone 2)
 
+> Written while this project was a port of OpenCutList (October–November 2026); it is now part of TinyCutList. References like "#1", "#2" or "#3" point to pull requests on `lairdubois/lairdubois-opencutlist-hew-extension`.
+
 > **Status: run on the M2 pre-release (`v1.5.0-pre.plugin-m2`): 18 of 18 pass, on real linked copies.** No simulation is involved in that result. Kurt (granroth) ran it first on Linux; it was re-run on Linux arm64, headless, on 12 November 2026. See "Results on M2" below.
 
 What OpenCutList needs from Hew's linked copies, as executable cases. Agreed on hew3d/hew#60 and in [lairdubois-opencutlist-hew-extension#1](https://github.com/lairdubois/lairdubois-opencutlist-hew-extension/pull/1) (concept mapping 0.4, §2 and §14): copying an Object or a group links it by default, with component semantics, per-placement data, and an explicit Unlink.
@@ -23,7 +25,7 @@ Each case runs in its own headless `hew-cli mcp` session, on a fresh document it
 - **SKIP**: a call whose M2 shape isn't public yet (marked TBD in `adapter.ts`) was rejected for its *shape* (unknown field, locator form). Only those calls can skip. Once the names are settled, they change in `adapter.ts` only.
 - **ERROR**: anything else (a crash, a timeout).
 
-`OCL_SIMULATE_LINKS=1` checks the cases themselves on a build without linked copies: before each copy gesture, loose objects and groups are folded into a component in the same transaction, which is what M2 is expected to do implicitly. It is for testing the test, not Hew.
+`TCL_SIMULATE_LINKS=1` checks the cases themselves on a build without linked copies: before each copy gesture, loose objects and groups are folded into a component in the same transaction, which is what M2 is expected to do implicitly. It is for testing the test, not Hew.
 
 ## Cases
 
@@ -78,7 +80,7 @@ The cases name world points; `toLeafFrame` maps them through the inverse of the 
 ## Results on M1 (`v1.4.0-pre.plugin-m1`, macOS, 6 November 2026), for the record
 
 - **Real gestures**: B1–B4 pass; L1–L9 and L11–L14 fail with "copies not linked" (expected before M2); L10 skips.
-- **Simulated links** (`OCL_SIMULATE_LINKS=1`): 13 pass, 5 skip (the five TBD calls), 0 fail. This only checks the cases' own logic. **It is not a result on Hew's linked copies**: what remains for M2 is the real gesture plus the TBD calls, and the whole suite has to be run again on the M2 build.
+- **Simulated links** (`TCL_SIMULATE_LINKS=1`): 13 pass, 5 skip (the five TBD calls), 0 fail. This only checks the cases' own logic. **It is not a result on Hew's linked copies**: what remains for M2 is the real gesture plus the TBD calls, and the whole suite has to be run again on the M2 build.
 - **One finding for M2** (B2): on M1, `make_unique` keeps the definition's attributes, but the copied solid **loses its name** (`"Side"` → `null`). Unlink has to keep it (L9 checks this).
 
 ## Files
