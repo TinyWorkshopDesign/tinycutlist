@@ -62,3 +62,16 @@ test("bars: pieces in order, kerf between them, inside the trims; too-long parts
   }
   assert.equal(n, 12);
 });
+
+test("the last sheet leaves one clean offcut, not scattered parts (several sheet sizes)", { skip }, async () => {
+  // a TV unit's 18 mm parts on two birch sizes: before, a 782 × 150 strip sat alone in the middle of the last sheet
+  const parts = [part("E", [850, 500, 18], 4, "Birch"), part("G", [800, 500, 18], 1, "Birch"), part("F", [800, 500, 18], 1, "Birch"), part("H", [782, 500, 18], 4, "Birch"), part("I", [782, 150, 18], 4, "Birch")];
+  const plan = await planCuts(list(parts), { Birch: { kind: "sheet", preset: "plywood-birch" } }, await loadSolver());
+  const last = plan.groups[0].sheets.at(-1)!;
+  assert.equal(last.offcuts.length, 1, "one offcut");
+  const o = last.offcuts[0];
+  assert.equal(o.width, last.width - 20, "the offcut runs the whole usable width");
+  const reach = Math.max(...last.parts.map((p) => p.x + (p.rotated ? p.width : p.length)));
+  assert.ok(o.x >= reach, "every part is on one side of it");
+  assert.ok(o.length >= 800, `a usable offcut, not a strip: ${o.length} × ${o.width}`);
+});

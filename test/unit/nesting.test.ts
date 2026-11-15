@@ -43,6 +43,7 @@ test("sheets: one instance per material and thickness, in tenths of a millimeter
   const call = solve.calls[0];
   assert.equal(call.type, "rectangleguillotine");
   assert.equal(call.params.optimization_mode, "not-anytime-sequential");
+  assert.equal(call.instance.objective, "bin-packing-with-leftovers");
   assert.equal(call.instance.cut_thickness, 32);
   assert.deepEqual([call.instance.bin_types[0].width, call.instance.bin_types[0].height, call.instance.bin_types[0].left_trim], [10000, 5000, 100]);
   assert.deepEqual(call.instance.item_types.map((i: any) => [i.width, i.height, i.copies, i.oriented]), [[6000, 3000, 2, false], [4000, 2000, 2, false]]);

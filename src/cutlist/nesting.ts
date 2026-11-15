@@ -115,7 +115,9 @@ async function nestSheets(items: Item[], st: Resolved, solve: Solver, group: Cut
   const total = fitting.reduce((n, it) => n + it.count, 0);
   const trim = Math.round(t * S);
   const certificate = await run(solve, "rectangleguillotine", {
-    objective: sizes.length === 1 ? "bin-packing-with-leftovers" : "variable-sized-bin-packing",
+    // with leftovers, the parts are packed towards one corner of the last sheet, so what's
+    // left is one clean offcut; plain variable-sized bin packing scatters parts across it
+    objective: "bin-packing-with-leftovers",
     cut_type: "non-exact",
     number_of_stages: 3,
     cut_thickness: Math.round(st.kerf * S),
