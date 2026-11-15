@@ -15,7 +15,7 @@ for (const scene of SCENES) {
     const host = await HewCliHost.start();
     try {
       await scene.build(host);
-      const res = await countParts(host, { pieces: true });
+      const res = await countParts(host);
       const errors = scene.check(res);
       assert.deepEqual(errors, [], `${errors.join("\n")}\n\n${formatMarkdown(scene.id, res)}`);
     } finally {
