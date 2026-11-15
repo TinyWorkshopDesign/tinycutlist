@@ -2,7 +2,7 @@
 
 Cut lists and cutting diagrams for [Hew](https://hew3d.com), as a plugin written in TypeScript on Hew's plugin API.
 
-**Status: skeleton.** Hew runs plugins from its milestone 3 on. Until then the code runs against `hew-cli`, Hew's command-line bus, and only the part counting is here. The first version aims at the parts list, exports and cutting diagrams.
+**Status: early.** Hew runs plugins from its milestone 3 on. Until then TinyCutList runs as a command line tool on `hew-cli`, Hew's command-line bus: it prints a model's parts list, as Markdown, CSV or JSON. Cutting diagrams come next.
 
 ## Where it comes from
 
@@ -19,7 +19,8 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `hew-plugin.json` | The plugin manifest (Hew's format, `docs/agents/PLUGINS.md` in Hew). Draft: Hew can't load plugins before M3. |
 | `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. From M3, a host over the SDK joins them. |
 | `src/model.ts` | What `hew.query.occurrences` reports, as the plugin reads it. |
-| `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), a Markdown table (`format.ts`). |
+| `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. |
+| `src/cli.ts` | The `tinycutlist` command: a file or the open document, out as Markdown, CSV or JSON. |
 | `src/background.ts` | The plugin's entry: its bus commands as plain handlers over a `Host`, to be registered through the SDK in M3. |
 | `test/scenes.ts` | Synthetic models, each with the cut list the rule must give. |
 | `tests/acceptance/linked-copies/` | The acceptance test for Hew's linked copies (milestone 2), run against a real build. |
@@ -29,6 +30,20 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `test/hew/` | The same scenes against a real Hew build. |
 | `tools/record-fixtures.ts` | Records the fixtures from a real build. |
 | `tools/corpus.ts` | Prints the cut list of real model files (`.hew` or `.skp`), opened in a private session. |
+
+## Command line
+
+```sh
+tinycutlist model.skp                        # the parts list, as a Markdown table
+tinycutlist model.hew -o list.csv            # CSV (or .md, .json), from the file's extension
+tinycutlist model.hew -o list.csv --sep ";" --decimal ","   # CSV for Italian (and other comma-decimal) spreadsheets
+tinycutlist --live                           # the document open in the Hew app
+tinycutlist --live --document "Cabinet.hew"  # another open window
+```
+
+It only reads: a file opens in a private Hew session and is never written back, and `--live` only queries the app's document. It needs `hew-cli`, which ships inside Hew: set `HEW_CLI` to its path if it isn't on the `PATH` (on macOS, `Hew.app` in `/Applications` is found by itself). `tinycutlist --help` lists every option.
+
+Until it's published, run it from a clone with `node src/cli.ts …` (or `npm run cutlist -- …`), or `npm link` it once to get the `tinycutlist` command.
 
 ## Running
 
