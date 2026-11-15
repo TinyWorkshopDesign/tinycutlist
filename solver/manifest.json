@@ -1,0 +1,10 @@
+{
+  "repository": "TinyWorkshopDesign/tinycutlist",
+  "release": "solver-5b0402c",
+  "packingsolver": "5b0402c9aaab3197488e57ff171e1a3413a7a338",
+  "emscripten": "7.0.0",
+  "files": {
+    "packingsolver.js": "0e1ecbe00b02c9e83b9a565684cb76b2c36e9a0c396c2e873a067786d44771ac",
+    "packingsolver.wasm": "0149d6312c826a7fc381947500c81a1e26203463ce347ac4a1ef4ce0dff41e4d"
+  }
+}

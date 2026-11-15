@@ -2,7 +2,7 @@
 
 Cut lists and cutting diagrams for [Hew](https://hew3d.com), as a plugin written in TypeScript on Hew's plugin API.
 
-**Status: early.** Hew runs plugins from its milestone 3 on. Until then TinyCutList runs as a command line tool on `hew-cli`, Hew's command-line bus: it prints a model's parts list, as Markdown, CSV or JSON. Cutting diagrams come next.
+**Status: early.** Hew runs plugins from its milestone 3 on. Until then TinyCutList runs as a command line tool on `hew-cli`, Hew's command-line bus: it prints a model's parts list (Markdown, CSV or JSON) and makes a printable page with the cutting plans for sheets and bars.
 
 ## Where it comes from
 
@@ -19,8 +19,9 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `hew-plugin.json` | The plugin manifest (Hew's format, `docs/agents/PLUGINS.md` in Hew). Draft: Hew can't load plugins before M3. |
 | `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. From M3, a host over the SDK joins them. |
 | `src/model.ts` | What `hew.query.occurrences` reports, as the plugin reads it. |
-| `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. |
-| `src/cli.ts` | The `tinycutlist` command: a file or the open document, out as Markdown, CSV or JSON. |
+| `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. Cutting plans: stock (`stock.ts`), standard sheet sizes (`presets.ts`), nesting with PackingSolver (`nesting.ts`), drawings (`svg.ts`) and the printable page (`html.ts`). |
+| `src/solver.ts`, `solver/` | PackingSolver as a single-threaded WebAssembly module: the CMake project that builds it, and the manifest of the released build. |
+| `src/cli.ts` | The `tinycutlist` command: a file or the open document, out as Markdown, CSV, JSON or a page with the cutting plans. |
 | `src/background.ts` | The plugin's entry: its bus commands as plain handlers over a `Host`, to be registered through the SDK in M3. |
 | `test/scenes.ts` | Synthetic models, each with the cut list the rule must give. |
 | `tests/acceptance/linked-copies/` | The acceptance test for Hew's linked copies (milestone 2), run against a real build. |
@@ -28,8 +29,10 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `prototype/counting/` | The first counting prototype. Superseded by `src/cutlist/`; kept for its notes on real models. |
 | `test/unit/` | The rule on recorded answers (`test/fixtures/`): no Hew needed. |
 | `test/hew/` | The same scenes against a real Hew build. |
+| `test/solver/` | Cutting plans with the real solver, checked geometrically. |
 | `tools/record-fixtures.ts` | Records the fixtures from a real build. |
 | `tools/corpus.ts` | Prints the cut list of real model files (`.hew` or `.skp`), opened in a private session. |
+| `tools/solver-build.sh`, `tools/solver-fetch.ts` | Build the solver from source, or download the released build and check its checksums. |
 
 ## Command line
 
@@ -45,6 +48,57 @@ It only reads: a file opens in a private Hew session and is never written back, 
 
 Until it's published, run it from a clone with `node src/cli.ts …` (or `npm run cutlist -- …`), or `npm link` it once to get the `tinycutlist` command.
 
+## Cutting plans
+
+```sh
+npm run solver:fetch                          # once: the PackingSolver module, into solver/dist
+tinycutlist model.skp -o plan.html            # parts list, glue-ups and cutting plans, ready to print
+tinycutlist model.skp --plan                  # the plans as a Markdown summary (or --plan with -f json)
+tinycutlist stock model.skp                   # add the model's materials to the stock file, to check
+```
+
+Parts are grouped by material and thickness (sheets) or material and section (bars), and each group is nested by [PackingSolver](https://github.com/fontanf/packingsolver) (Florian Fontan, MIT): sheets with saw cuts in three stages, bars cut to length. Parts bigger than any stock size are listed, never dropped.
+
+**What each material is cut from** lives in a stock file, keyed by the material's name in the model (`(no material)` for parts without one):
+
+```json
+{
+  "Birch plywood 18": { "kind": "sheet", "preset": "plywood-birch" },
+  "Oak boards":       { "kind": "sheet", "sheets": [[2400, 180], [2000, 150]], "grain": true, "kerf": 3.2, "trim": 10 },
+  "Pine batten 40":   { "kind": "bar", "bars": [3000], "kerf": 3, "trim": 10 },
+  "Steel":            { "kind": "list" }
+}
+```
+
+- `kind`: `sheet` (panels or boards, in mm, length first), `bar` (lengths in mm) or `list` (in the parts list, no plan).
+- `kerf` is the blade width, `trim` what's cut off each edge of a sheet or each end of a bar. `grain: true` keeps each part's length along the sheet's length.
+- `preset` starts from a standard sheet good (`src/cutlist/presets.ts`): its usual full-sheet sizes and grain. Sizes set in the entry win.
+- The global file is `~/.config/tinycutlist/stock.json` (or `$TINYCUTLIST_CONFIG/stock.json`); `--stock file.json` adds a project's own on top, material by material.
+- A material that no file has is guessed from its name (a preset, or a sheet, bar or list by its wording) and the page says so. `tinycutlist stock` writes those guesses into the file, marked `"guessed": true`: check the sizes, then remove the mark.
+
+Presets, with their full-sheet sizes in mm:
+
+| Preset | Sheets | Grain |
+|---|---|---|
+| `plywood-poplar` | 2520 × 1870, 2500 × 1250, 2440 × 1220 | no |
+| `plywood-birch` | 2500 × 1250, 1525 × 1525 | yes |
+| `plywood-okoume` | 3100 × 1530, 2500 × 1220 | yes |
+| `plywood-pine` | 2500 × 1250, 2440 × 1220 | no |
+| `plywood-phenolic` | 2500 × 1250 | no |
+| `plywood-faced` | 3050 × 1300, 2440 × 1220 | yes |
+| `thin-plywood` (3–6 mm) | 2520 × 1250, 3000 × 1250 | yes |
+| `mdf` | 2800 × 2070, 3660 × 2200 | no |
+| `hdf` | 2800 × 2070 | no |
+| `chipboard` | 2800 × 2070, 3770 × 2070 | no |
+| `chipboard-melamine` | 2800 × 2070, 3050 × 2070 | no |
+| `osb` | 2500 × 1250 | no |
+| `blockboard` | 3120 × 1850, 3660 × 1870 | yes |
+| `panel-spruce` | 2450 × 1200, 3000 × 1250 | yes |
+| `panel-3-layer` | 5050 × 2050, 3000 × 1250 | yes |
+| `panel-hardwood` | 3000 × 1200, 4500 × 1220 | yes |
+
+**The solver** is PackingSolver's own JavaScript API (`wasm/` in its repository) built without threads (`solver/CMakeLists.txt`), so it runs in any Worker, without cross-origin isolation, as a Hew plugin needs. It runs one optimization at a time, in "not-anytime-sequential" mode. `npm run solver:fetch` downloads the build named in `solver/manifest.json` from this repository's releases and checks its SHA-256; `npm run solver:build` builds it from source with Emscripten (set `EMSDK`). `TINYCUTLIST_SOLVER` points at another folder.
+
 ## Running
 
 Node ≥ 23.6 runs the TypeScript directly; `npm install` only fetches the type checker.
@@ -56,6 +110,7 @@ npm run typecheck
 HEW_CLI=/path/to/hew-cli npm run test:hew  # the same scenes, live
 HEW_CLI=/path/to/hew-cli npm run record    # re-record the fixtures on a new build
 HEW_CLI=/path/to/hew-cli node tools/corpus.ts model.skp   # a real model's cut list
+npm run test:solver                        # cutting plans with the real solver (after solver:fetch)
 ```
 
 `hew-cli` ships inside Hew (`Hew.app/Contents/MacOS/hew-cli` on macOS, in the AppImage on Linux). The fixtures say which build recorded them; they were recorded on `1.5.0-pre.plugin-m2`.
