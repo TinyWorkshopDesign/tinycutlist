@@ -19,7 +19,7 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `hew-plugin.json` | The plugin manifest (Hew's format, `docs/agents/PLUGINS.md` in Hew). Draft: Hew can't load plugins before M3. |
 | `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. From M3, a host over the SDK joins them. |
 | `src/model.ts` | What `hew.query.occurrences` reports, as the plugin reads it. |
-| `src/cutlist/` | The counting rule (`count.ts`), material types (`materials.ts`), a Markdown table (`format.ts`). |
+| `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), a Markdown table (`format.ts`). |
 | `src/background.ts` | The plugin's entry: its bus commands as plain handlers over a `Host`, to be registered through the SDK in M3. |
 | `test/scenes.ts` | Synthetic models, each with the cut list the rule must give. |
 | `tests/acceptance/linked-copies/` | The acceptance test for Hew's linked copies (milestone 2), run against a real build. |
@@ -28,6 +28,7 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `test/unit/` | The rule on recorded answers (`test/fixtures/`): no Hew needed. |
 | `test/hew/` | The same scenes against a real Hew build. |
 | `tools/record-fixtures.ts` | Records the fixtures from a real build. |
+| `tools/corpus.ts` | Prints the cut list of real model files (`.hew` or `.skp`), opened in a private session. |
 
 ## Running
 
@@ -39,21 +40,24 @@ npm test                                   # unit tests, on the recorded answers
 npm run typecheck
 HEW_CLI=/path/to/hew-cli npm run test:hew  # the same scenes, live
 HEW_CLI=/path/to/hew-cli npm run record    # re-record the fixtures on a new build
+HEW_CLI=/path/to/hew-cli node tools/corpus.ts model.skp   # a real model's cut list
 ```
 
 `hew-cli` ships inside Hew (`Hew.app/Contents/MacOS/hew-cli` on macOS, in the AppImage on Linux). The fixtures say which build recorded them; they were recorded on `1.5.0-pre.plugin-m2`.
 
 ## The rule
 
-The code today implements the component-based rule below, from the concept mapping. **It is going to change**: the plan is the simpler "a part is a closed solid". A board that was never copied is a part placed once, linked copies are counted as Hew reports them, and look-alike solids are only suggested for linking.
-
 - Hew reports facts, the plugin applies the rule.
-- A part is any component placement with solids of its own, at any depth, sized from those solids only. Groups are transparent: their solids and the placements in them count toward the enclosing component.
-- Identical parts are counted by definition, so Hew's linked copies count as one part placed several times. Rows are split on material, size and mirroring (unless the definition is `symmetrical`).
-- Hardware (a placement painted with a `hardware` material) is one item. Machining bodies are left out of the size. Assemblies (no solids of their own) aren't parts. Hidden placements are skipped. Open objects are reported, not measured.
-- Objects with no definition (never copied, or imported SketchUp groups) are listed as parts placed once.
+- **A part is a closed solid**: every Object Hew reports as `solid`, wherever it sits (loose, in a group, or inside a component, at any depth). Groups and components only organise; an assembly is never a part. Hidden placements are skipped.
+- **One row per solid.** Hew's linked copies share their solid, so a board copied three times is one row ×4, even when a copy is renamed (the other name shows in the notes). A board that was never copied is a row ×1. Rows split on material, size and handedness.
+- **Handedness comes from Hew** (`hew.query.signature`): a mirrored placement is its own row only when the solid isn't its own mirror image. A plain board mirrored is the same part; a cabinet side with a rabbet and a dado has a left and a right.
+- **Material** is what the user sees: the solid's base material, else its faces' (painted faces, then the nearest painted placement). Faces painted with an `edge` or `veneer` material don't count.
+- **Glue-ups.** Boards glued face to face (laminated) or edge to edge (an edge-glued panel) stay separate parts, one per board, because that's what gets cut. They are also listed as glue-ups, with the blank's size and the boards in order across it, so the grain can be matched before gluing. Two boards glue up when their lengths are parallel and about the same, they overlap almost fully, and they touch: face to face with about the same width, or edge to edge with the same thickness, in one plane (`src/cutlist/glue.ts`).
+- **Look-alikes**: different solids with the same shape and material (Hew's `shape` hash) are suggested for linking, never counted together. Boards of one glue-up are never suggested.
+- Objects that aren't closed solids are reported, not measured.
+- No hardware or machining types: TinyCutList is for hobbyists and small workshops, and keeps to the parts list, cutting diagrams and exports.
 
-The scenes cover each point. S5 (groups inside a part) and S6 (linked copies) come from what the real models showed on M2.
+The scenes cover each point. On the five real models in the port's tests, the glue-ups found are two shelves made of eight strips, a doubled 36 mm panel, and the two halves of each castor wheel.
 
 ## License
 

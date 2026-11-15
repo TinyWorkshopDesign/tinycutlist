@@ -1,6 +1,6 @@
 {
  "hew": "hew-cli 1.5.0-pre.plugin-m2",
- "note": "Left and right sides: a mirrored placement is a separate part, unless symmetrical",
+ "note": "Left and right sides: a mirrored placement is a separate part only if the solid has a hand",
  "exchanges": [
   {
    "method": "hew.query.occurrences",
@@ -8,15 +8,15 @@
     "include_hidden": false
    },
    "result": {
-    "epoch": 24,
-    "generation": 22,
+    "epoch": 34,
+    "generation": 32,
     "occurrences": [
      {
-      "definition": "cmp_2",
+      "definition": "cmp_8",
       "definition_name": "Side",
       "depth": 0,
       "hidden": false,
-      "id": "ins_3",
+      "id": "ins_9",
       "kind": "instance",
       "linked": false,
       "material": null,
@@ -25,7 +25,7 @@
        "groups": [],
        "instances": [],
        "objects": [
-        "obj_1"
+        "obj_7"
        ]
       },
       "mirrored": false,
@@ -56,7 +56,7 @@
       "family": null,
       "family_closed": null,
       "hidden": false,
-      "id": "obj_1",
+      "id": "obj_7",
       "kind": "object",
       "material": null,
       "material_effective": null,
@@ -69,7 +69,7 @@
       "name": "Side",
       "parent": null,
       "path": [
-       "ins_3"
+       "ins_9"
       ],
       "solid": true,
       "tags": [],
@@ -90,11 +90,11 @@
       ]
      },
      {
-      "definition": "cmp_2",
+      "definition": "cmp_8",
       "definition_name": "Side",
       "depth": 0,
       "hidden": false,
-      "id": "ins_4",
+      "id": "ins_a",
       "kind": "instance",
       "linked": false,
       "material": null,
@@ -103,7 +103,7 @@
        "groups": [],
        "instances": [],
        "objects": [
-        "obj_1"
+        "obj_7"
        ]
       },
       "mirrored": true,
@@ -134,7 +134,7 @@
       "family": null,
       "family_closed": null,
       "hidden": false,
-      "id": "obj_1",
+      "id": "obj_7",
       "kind": "object",
       "material": null,
       "material_effective": null,
@@ -147,7 +147,7 @@
       "name": "Side",
       "parent": null,
       "path": [
-       "ins_4"
+       "ins_a"
       ],
       "solid": true,
       "tags": [],
@@ -168,11 +168,11 @@
       ]
      },
      {
-      "definition": "cmp_7",
+      "definition": "cmp_d",
       "definition_name": "Shelf",
       "depth": 0,
       "hidden": false,
-      "id": "ins_8",
+      "id": "ins_e",
       "kind": "instance",
       "linked": false,
       "material": null,
@@ -181,7 +181,7 @@
        "groups": [],
        "instances": [],
        "objects": [
-        "obj_6"
+        "obj_c"
        ]
       },
       "mirrored": false,
@@ -212,7 +212,7 @@
       "family": null,
       "family_closed": null,
       "hidden": false,
-      "id": "obj_6",
+      "id": "obj_c",
       "kind": "object",
       "material": null,
       "material_effective": null,
@@ -225,7 +225,7 @@
       "name": "Shelf",
       "parent": null,
       "path": [
-       "ins_8"
+       "ins_e"
       ],
       "solid": true,
       "tags": [],
@@ -246,11 +246,11 @@
       ]
      },
      {
-      "definition": "cmp_7",
+      "definition": "cmp_d",
       "definition_name": "Shelf",
       "depth": 0,
       "hidden": false,
-      "id": "ins_9",
+      "id": "ins_f",
       "kind": "instance",
       "linked": false,
       "material": null,
@@ -259,7 +259,7 @@
        "groups": [],
        "instances": [],
        "objects": [
-        "obj_6"
+        "obj_c"
        ]
       },
       "mirrored": true,
@@ -290,7 +290,7 @@
       "family": null,
       "family_closed": null,
       "hidden": false,
-      "id": "obj_6",
+      "id": "obj_c",
       "kind": "object",
       "material": null,
       "material_effective": null,
@@ -303,7 +303,7 @@
       "name": "Shelf",
       "parent": null,
       "path": [
-       "ins_9"
+       "ins_f"
       ],
       "solid": true,
       "tags": [],
@@ -332,13 +332,13 @@
    "result": {
     "components": [
      {
-      "id": "cmp_2",
+      "id": "cmp_8",
       "instance_count": 2,
       "name": "Side",
       "usage": 2
      },
      {
-      "id": "cmp_7",
+      "id": "cmp_d",
       "instance_count": 2,
       "name": "Shelf",
       "usage": 2
@@ -353,8 +353,8 @@
      "objects": 0,
      "sketches": 0
     },
-    "epoch": 24,
-    "generation": 22,
+    "epoch": 34,
+    "generation": 32,
     "guides": [],
     "materials": [],
     "sketches": [],
@@ -373,10 +373,10 @@
         0
        ]
       },
-      "def": "cmp_2",
+      "def": "cmp_8",
       "health": "solid",
       "hidden": false,
-      "id": "ins_3",
+      "id": "ins_9",
       "kind": "instance",
       "material": null,
       "mirrored": false,
@@ -413,10 +413,10 @@
         0
        ]
       },
-      "def": "cmp_2",
+      "def": "cmp_8",
       "health": "solid",
       "hidden": false,
-      "id": "ins_4",
+      "id": "ins_a",
       "kind": "instance",
       "material": null,
       "mirrored": true,
@@ -453,10 +453,10 @@
         0.3
        ]
       },
-      "def": "cmp_7",
+      "def": "cmp_d",
       "health": "solid",
       "hidden": false,
-      "id": "ins_8",
+      "id": "ins_e",
       "kind": "instance",
       "material": null,
       "mirrored": false,
@@ -493,10 +493,10 @@
         0.3
        ]
       },
-      "def": "cmp_7",
+      "def": "cmp_d",
       "health": "solid",
       "hidden": false,
-      "id": "ins_9",
+      "id": "ins_f",
       "kind": "instance",
       "material": null,
       "mirrored": true,
@@ -524,740 +524,75 @@
    }
   },
   {
+   "method": "hew.query.signature",
+   "params": {
+    "path": [
+     "ins_9",
+     "obj_7"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "frame": {
+     "extents": [
+      0.7,
+      0.5,
+      0.018
+     ],
+     "origin": [
+      0.018,
+      0,
+      0
+     ],
+     "x": [
+      0,
+      0,
+      1
+     ],
+     "y": [
+      0,
+      1,
+      0
+     ],
+     "z": [
+      -1,
+      0,
+      0
+     ]
+    },
+    "generation": 32,
+    "mirror": "0bbd9908a1ace7a0d17827a6fccd1aa7d24ba17ea4311af94fd126b688a407d0",
+    "shape": "20708f37c89daa4383ee65c299f5bd7c7961d8dbbb6d5c7599eecd4b96edbe57",
+    "symmetric": false
+   }
+  },
+  {
    "method": "hew.query.part_frame",
    "params": {
     "path": [
-     "ins_3"
-    ],
-    "scope": "own"
+     "ins_9",
+     "obj_7"
+    ]
    },
    "result": {
-    "epoch": 24,
+    "epoch": 34,
     "extents": [
-     0.018,
+     0.7,
      0.5,
-     0.7
+     0.018
     ],
-    "generation": 22,
+    "generation": 32,
     "mirrored": false,
     "origin": [
-     0,
-     0,
-     0
-    ],
-    "source": "definition",
-    "x": [
-     1,
-     0,
-     0
-    ],
-    "y": [
-     0,
-     1,
-     0
-    ],
-    "z": [
-     0,
-     0,
-     1
-    ]
-   }
-  },
-  {
-   "method": "hew.query.faces",
-   "params": {
-    "path": [
-     "ins_3",
-     "obj_1"
-    ]
-   },
-   "result": {
-    "epoch": 24,
-    "faces": [
-     {
-      "area": 0.009,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0.25,
-       0
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0.5,
-        0
-       ],
-       [
-        0.018,
-        0.5,
-        0
-       ],
-       [
-        0.018,
-        0,
-        0
-       ],
-       [
-        0,
-        0,
-        0
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        0,
-        -1
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.009,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0.25,
-       0.6999999999999998
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0,
-        0.7
-       ],
-       [
-        0.018,
-        0,
-        0.7
-       ],
-       [
-        0.018,
-        0.5,
-        0.7
-       ],
-       [
-        0,
-        0.5,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        0,
-        1
-       ],
-       "point": [
-        0,
-        0,
-        0.7
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.012599999999999998,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0,
-       0.35
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0,
-        0
-       ],
-       [
-        0.018,
-        0,
-        0
-       ],
-       [
-        0.018,
-        0,
-        0.7
-       ],
-       [
-        0,
-        0,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        -1,
-        0
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.35,
-      "attrs": {},
-      "centroid": [
-       0.017999999999999995,
-       0.25,
-       0.3499999999999999
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0.018,
-        0,
-        0
-       ],
-       [
-        0.018,
-        0.5,
-        0
-       ],
-       [
-        0.018,
-        0.5,
-        0.7
-       ],
-       [
-        0.018,
-        0,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        1,
-        0,
-        0
-       ],
-       "point": [
-        0.018,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.012599999999999998,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0.5,
-       0.35
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0.018,
-        0.5,
-        0
-       ],
-       [
-        0,
-        0.5,
-        0
-       ],
-       [
-        0,
-        0.5,
-        0.7
-       ],
-       [
-        0.018,
-        0.5,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        1,
-        0
-       ],
-       "point": [
-        0,
-        0.5,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.35,
-      "attrs": {},
-      "centroid": [
-       0,
-       0.25,
-       0.3499999999999999
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0.5,
-        0
-       ],
-       [
-        0,
-        0,
-        0
-       ],
-       [
-        0,
-        0,
-        0.7
-       ],
-       [
-        0,
-        0.5,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        -1,
-        0,
-        0
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     }
-    ],
-    "generation": 22,
-    "object": "obj_1"
-   }
-  },
-  {
-   "method": "hew.query.part_frame",
-   "params": {
-    "path": [
-     "ins_4"
-    ],
-    "scope": "own"
-   },
-   "result": {
-    "epoch": 24,
-    "extents": [
      0.018,
-     0.5,
-     0.7
-    ],
-    "generation": 22,
-    "mirrored": true,
-    "origin": [
-     0.6,
      0,
      0
     ],
-    "source": "definition",
+    "source": "face",
     "x": [
-     -1,
-     0,
-     0
-    ],
-    "y": [
-     0,
-     -1,
-     0
-    ],
-    "z": [
      0,
      0,
      1
-    ]
-   }
-  },
-  {
-   "method": "hew.query.faces",
-   "params": {
-    "path": [
-     "ins_4",
-     "obj_1"
-    ]
-   },
-   "result": {
-    "epoch": 24,
-    "faces": [
-     {
-      "area": 0.009,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0.25,
-       0
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0.5,
-        0
-       ],
-       [
-        0.018,
-        0.5,
-        0
-       ],
-       [
-        0.018,
-        0,
-        0
-       ],
-       [
-        0,
-        0,
-        0
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        0,
-        -1
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.009,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0.25,
-       0.6999999999999998
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0,
-        0.7
-       ],
-       [
-        0.018,
-        0,
-        0.7
-       ],
-       [
-        0.018,
-        0.5,
-        0.7
-       ],
-       [
-        0,
-        0.5,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        0,
-        1
-       ],
-       "point": [
-        0,
-        0,
-        0.7
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.012599999999999998,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0,
-       0.35
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0,
-        0
-       ],
-       [
-        0.018,
-        0,
-        0
-       ],
-       [
-        0.018,
-        0,
-        0.7
-       ],
-       [
-        0,
-        0,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        -1,
-        0
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.35,
-      "attrs": {},
-      "centroid": [
-       0.017999999999999995,
-       0.25,
-       0.3499999999999999
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0.018,
-        0,
-        0
-       ],
-       [
-        0.018,
-        0.5,
-        0
-       ],
-       [
-        0.018,
-        0.5,
-        0.7
-       ],
-       [
-        0.018,
-        0,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        1,
-        0,
-        0
-       ],
-       "point": [
-        0.018,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.012599999999999998,
-      "attrs": {},
-      "centroid": [
-       0.009,
-       0.5,
-       0.35
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0.018,
-        0.5,
-        0
-       ],
-       [
-        0,
-        0.5,
-        0
-       ],
-       [
-        0,
-        0.5,
-        0.7
-       ],
-       [
-        0.018,
-        0.5,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        1,
-        0
-       ],
-       "point": [
-        0,
-        0.5,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.35,
-      "attrs": {},
-      "centroid": [
-       0,
-       0.25,
-       0.3499999999999999
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_1",
-      "outer": [
-       [
-        0,
-        0.5,
-        0
-       ],
-       [
-        0,
-        0,
-        0
-       ],
-       [
-        0,
-        0,
-        0.7
-       ],
-       [
-        0,
-        0.5,
-        0.7
-       ]
-      ],
-      "plane": {
-       "normal": [
-        -1,
-        0,
-        0
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     }
-    ],
-    "generation": 22,
-    "object": "obj_1"
-   }
-  },
-  {
-   "method": "hew.attr.get",
-   "params": {
-    "target": "cmp_2",
-    "ns": "io.github.tinyworkshopdesign.tinycutlist"
-   },
-   "result": {}
-  },
-  {
-   "method": "hew.query.part_frame",
-   "params": {
-    "path": [
-     "ins_8"
-    ],
-    "scope": "own"
-   },
-   "result": {
-    "epoch": 24,
-    "extents": [
-     0.56,
-     0.48,
-     0.018000000000000016
-    ],
-    "generation": 22,
-    "mirrored": false,
-    "origin": [
-     0,
-     0,
-     0
-    ],
-    "source": "definition",
-    "x": [
-     1,
-     0,
-     0
     ],
     "y": [
      0,
@@ -1265,359 +600,9 @@
      0
     ],
     "z": [
-     0,
-     0,
-     1
-    ]
-   }
-  },
-  {
-   "method": "hew.query.faces",
-   "params": {
-    "path": [
-     "ins_8",
-     "obj_6"
-    ]
-   },
-   "result": {
-    "epoch": 24,
-    "faces": [
-     {
-      "area": 0.26880000000000004,
-      "attrs": {},
-      "centroid": [
-       0.2800000000000001,
-       0.24,
-       0.29999999999999993
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_6",
-      "outer": [
-       [
-        0,
-        0.48,
-        0.3
-       ],
-       [
-        0.56,
-        0.48,
-        0.3
-       ],
-       [
-        0.56,
-        0,
-        0.3
-       ],
-       [
-        0,
-        0,
-        0.3
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        0,
-        -1
-       ],
-       "point": [
-        0,
-        0,
-        0.3
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.26880000000000004,
-      "attrs": {},
-      "centroid": [
-       0.2800000000000001,
-       0.24,
-       0.31799999999999995
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_6",
-      "outer": [
-       [
-        0,
-        0,
-        0.318
-       ],
-       [
-        0.56,
-        0,
-        0.318
-       ],
-       [
-        0.56,
-        0.48,
-        0.318
-       ],
-       [
-        0,
-        0.48,
-        0.318
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        0,
-        1
-       ],
-       "point": [
-        0,
-        0,
-        0.318
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.010080000000000006,
-      "attrs": {},
-      "centroid": [
-       0.28,
-       0,
-       0.3089999999999999
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_6",
-      "outer": [
-       [
-        0,
-        0,
-        0.3
-       ],
-       [
-        0.56,
-        0,
-        0.3
-       ],
-       [
-        0.56,
-        0,
-        0.318
-       ],
-       [
-        0,
-        0,
-        0.318
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        -1,
-        0
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.008640000000000009,
-      "attrs": {},
-      "centroid": [
-       0.56,
-       0.23999999999999996,
-       0.30899999999999994
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_6",
-      "outer": [
-       [
-        0.56,
-        0,
-        0.3
-       ],
-       [
-        0.56,
-        0.48,
-        0.3
-       ],
-       [
-        0.56,
-        0.48,
-        0.318
-       ],
-       [
-        0.56,
-        0,
-        0.318
-       ]
-      ],
-      "plane": {
-       "normal": [
-        1,
-        0,
-        0
-       ],
-       "point": [
-        0.56,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.010080000000000006,
-      "attrs": {},
-      "centroid": [
-       0.28,
-       0.4799999999999999,
-       0.3089999999999999
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_6",
-      "outer": [
-       [
-        0.56,
-        0.48,
-        0.3
-       ],
-       [
-        0,
-        0.48,
-        0.3
-       ],
-       [
-        0,
-        0.48,
-        0.318
-       ],
-       [
-        0.56,
-        0.48,
-        0.318
-       ]
-      ],
-      "plane": {
-       "normal": [
-        0,
-        1,
-        0
-       ],
-       "point": [
-        0,
-        0.48,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     },
-     {
-      "area": 0.008640000000000009,
-      "attrs": {},
-      "centroid": [
-       0,
-       0.23999999999999996,
-       0.30899999999999994
-      ],
-      "holes": [],
-      "material": null,
-      "material_effective": null,
-      "object": "obj_6",
-      "outer": [
-       [
-        0,
-        0.48,
-        0.3
-       ],
-       [
-        0,
-        0,
-        0.3
-       ],
-       [
-        0,
-        0,
-        0.318
-       ],
-       [
-        0,
-        0.48,
-        0.318
-       ]
-      ],
-      "plane": {
-       "normal": [
-        -1,
-        0,
-        0
-       ],
-       "point": [
-        0,
-        0,
-        0
-       ]
-      },
-      "surface": null,
-      "texture_pins": null
-     }
-    ],
-    "generation": 22,
-    "object": "obj_6"
-   }
-  },
-  {
-   "method": "hew.query.part_frame",
-   "params": {
-    "path": [
-     "ins_9"
-    ],
-    "scope": "own"
-   },
-   "result": {
-    "epoch": 24,
-    "extents": [
-     0.56,
-     0.48,
-     0.018000000000000016
-    ],
-    "generation": 22,
-    "mirrored": true,
-    "origin": [
-     3,
-     0,
-     0
-    ],
-    "source": "definition",
-    "x": [
      -1,
      0,
      0
-    ],
-    "y": [
-     0,
-     -1,
-     0
-    ],
-    "z": [
-     0,
-     0,
-     1
     ]
    }
   },
@@ -1626,11 +611,1505 @@
    "params": {
     "path": [
      "ins_9",
-     "obj_6"
+     "obj_7"
     ]
    },
    "result": {
-    "epoch": 24,
+    "epoch": 34,
+    "faces": [
+     {
+      "area": 0.008819999999999998,
+      "attrs": {},
+      "centroid": [
+       0.008908163265306121,
+       0.2451020408163265,
+       0
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0.5,
+        0
+       ],
+       [
+        0.009,
+        0.5,
+        0
+       ],
+       [
+        0.009,
+        0.48,
+        0
+       ],
+       [
+        0.018,
+        0.48,
+        0
+       ],
+       [
+        0.018,
+        0,
+        0
+       ],
+       [
+        0,
+        0,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        -1
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.00882,
+      "attrs": {},
+      "centroid": [
+       0.008908163265306121,
+       0.2451020408163265,
+       0.6999999999999998
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0,
+        0.7
+       ],
+       [
+        0.018,
+        0,
+        0.7
+       ],
+       [
+        0.018,
+        0.48,
+        0.7
+       ],
+       [
+        0.009,
+        0.48,
+        0.7
+       ],
+       [
+        0.009,
+        0.5,
+        0.7
+       ],
+       [
+        0,
+        0.5,
+        0.7
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        1
+       ],
+       "point": [
+        0,
+        0,
+        0.7000000000000001
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.012492,
+      "attrs": {},
+      "centroid": [
+       0.008948126801152737,
+       0,
+       0.35208357348703173
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0,
+        0
+       ],
+       [
+        0.018,
+        0,
+        0
+       ],
+       [
+        0.018,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0,
+        0.118
+       ],
+       [
+        0.018,
+        0,
+        0.118
+       ],
+       [
+        0.018,
+        0,
+        0.7
+       ],
+       [
+        0,
+        0,
+        0.7
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        -1,
+        0
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.27935999999999994,
+      "attrs": {},
+      "centroid": [
+       0.017999999999999995,
+       0.23999999999999994,
+       0.409
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.018,
+        0.48,
+        0.7
+       ],
+       [
+        0.018,
+        0,
+        0.7
+       ],
+       [
+        0.018,
+        0,
+        0.118
+       ],
+       [
+        0.018,
+        0.48,
+        0.118
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.018,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.04800000000000001,
+      "attrs": {},
+      "centroid": [
+       0.017999999999999995,
+       0.23999999999999996,
+       0.05
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.018,
+        0,
+        0
+       ],
+       [
+        0.018,
+        0.48,
+        0
+       ],
+       [
+        0.018,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0,
+        0.10000000000000002
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.018,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.006299999999999999,
+      "attrs": {},
+      "centroid": [
+       0.0045,
+       0.5,
+       0.35
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0.5,
+        0
+       ],
+       [
+        0,
+        0.5,
+        0.7
+       ],
+       [
+        0.009,
+        0.5,
+        0.7
+       ],
+       [
+        0.009,
+        0.5,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        1,
+        0
+       ],
+       "point": [
+        0,
+        0.5,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.35,
+      "attrs": {},
+      "centroid": [
+       0,
+       0.25,
+       0.3499999999999999
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0.5,
+        0
+       ],
+       [
+        0,
+        0,
+        0
+       ],
+       [
+        0,
+        0,
+        0.7
+       ],
+       [
+        0,
+        0.5,
+        0.7
+       ]
+      ],
+      "plane": {
+       "normal": [
+        -1,
+        0,
+        0
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.006192,
+      "attrs": {},
+      "centroid": [
+       0.013473837209302324,
+       0.4799999999999999,
+       0.354203488372093
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.009,
+        0.48,
+        0.7
+       ],
+       [
+        0.018,
+        0.48,
+        0.7
+       ],
+       [
+        0.018,
+        0.48,
+        0.118
+       ],
+       [
+        0.012,
+        0.48,
+        0.118
+       ],
+       [
+        0.012,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0.48,
+        0
+       ],
+       [
+        0.009,
+        0.48,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        1,
+        0
+       ],
+       "point": [
+        0,
+        0.48,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.014000000000000012,
+      "attrs": {},
+      "centroid": [
+       0.009,
+       0.48999999999999994,
+       0.35000000000000003
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.009,
+        0.5,
+        0
+       ],
+       [
+        0.009,
+        0.5,
+        0.7
+       ],
+       [
+        0.009,
+        0.48,
+        0.7
+       ],
+       [
+        0.009,
+        0.48,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.009,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.002879999999999999,
+      "attrs": {},
+      "centroid": [
+       0.015,
+       0.23999999999999994,
+       0.1
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.018,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0,
+        0.10000000000000002
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        1
+       ],
+       "point": [
+        0,
+        0,
+        0.10000000000000002
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.002879999999999999,
+      "attrs": {},
+      "centroid": [
+       0.015,
+       0.23999999999999994,
+       0.11799999999999998
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.012,
+        0.48,
+        0.118
+       ],
+       [
+        0.018,
+        0.48,
+        0.118
+       ],
+       [
+        0.018,
+        0,
+        0.118
+       ],
+       [
+        0.012,
+        0,
+        0.118
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        -1
+       ],
+       "point": [
+        0,
+        0,
+        0.118
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.008639999999999988,
+      "attrs": {},
+      "centroid": [
+       0.012,
+       0.23999999999999994,
+       0.10900000000000001
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.012,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0.48,
+        0.118
+       ],
+       [
+        0.012,
+        0,
+        0.118
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.012,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     }
+    ],
+    "generation": 32,
+    "object": "obj_7"
+   }
+  },
+  {
+   "method": "hew.query.signature",
+   "params": {
+    "path": [
+     "ins_a",
+     "obj_7"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "frame": {
+     "extents": [
+      0.7,
+      0.5,
+      0.018000000000000016
+     ],
+     "origin": [
+      0.582,
+      0.5,
+      0
+     ],
+     "x": [
+      0,
+      0,
+      1
+     ],
+     "y": [
+      0,
+      -1,
+      0
+     ],
+     "z": [
+      1,
+      0,
+      0
+     ]
+    },
+    "generation": 32,
+    "mirror": "20708f37c89daa4383ee65c299f5bd7c7961d8dbbb6d5c7599eecd4b96edbe57",
+    "shape": "0bbd9908a1ace7a0d17827a6fccd1aa7d24ba17ea4311af94fd126b688a407d0",
+    "symmetric": false
+   }
+  },
+  {
+   "method": "hew.query.part_frame",
+   "params": {
+    "path": [
+     "ins_a",
+     "obj_7"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "extents": [
+     0.7,
+     0.5,
+     0.018000000000000016
+    ],
+    "generation": 32,
+    "mirrored": true,
+    "origin": [
+     0.582,
+     0.5,
+     0
+    ],
+    "source": "face",
+    "x": [
+     0,
+     0,
+     1
+    ],
+    "y": [
+     0,
+     -1,
+     0
+    ],
+    "z": [
+     1,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "method": "hew.query.faces",
+   "params": {
+    "path": [
+     "ins_a",
+     "obj_7"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "faces": [
+     {
+      "area": 0.008819999999999998,
+      "attrs": {},
+      "centroid": [
+       0.008908163265306121,
+       0.2451020408163265,
+       0
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0.5,
+        0
+       ],
+       [
+        0.009,
+        0.5,
+        0
+       ],
+       [
+        0.009,
+        0.48,
+        0
+       ],
+       [
+        0.018,
+        0.48,
+        0
+       ],
+       [
+        0.018,
+        0,
+        0
+       ],
+       [
+        0,
+        0,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        -1
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.00882,
+      "attrs": {},
+      "centroid": [
+       0.008908163265306121,
+       0.2451020408163265,
+       0.6999999999999998
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0,
+        0.7
+       ],
+       [
+        0.018,
+        0,
+        0.7
+       ],
+       [
+        0.018,
+        0.48,
+        0.7
+       ],
+       [
+        0.009,
+        0.48,
+        0.7
+       ],
+       [
+        0.009,
+        0.5,
+        0.7
+       ],
+       [
+        0,
+        0.5,
+        0.7
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        1
+       ],
+       "point": [
+        0,
+        0,
+        0.7000000000000001
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.012492,
+      "attrs": {},
+      "centroid": [
+       0.008948126801152737,
+       0,
+       0.35208357348703173
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0,
+        0
+       ],
+       [
+        0.018,
+        0,
+        0
+       ],
+       [
+        0.018,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0,
+        0.118
+       ],
+       [
+        0.018,
+        0,
+        0.118
+       ],
+       [
+        0.018,
+        0,
+        0.7
+       ],
+       [
+        0,
+        0,
+        0.7
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        -1,
+        0
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.27935999999999994,
+      "attrs": {},
+      "centroid": [
+       0.017999999999999995,
+       0.23999999999999994,
+       0.409
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.018,
+        0.48,
+        0.7
+       ],
+       [
+        0.018,
+        0,
+        0.7
+       ],
+       [
+        0.018,
+        0,
+        0.118
+       ],
+       [
+        0.018,
+        0.48,
+        0.118
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.018,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.04800000000000001,
+      "attrs": {},
+      "centroid": [
+       0.017999999999999995,
+       0.23999999999999996,
+       0.05
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.018,
+        0,
+        0
+       ],
+       [
+        0.018,
+        0.48,
+        0
+       ],
+       [
+        0.018,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0,
+        0.10000000000000002
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.018,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.006299999999999999,
+      "attrs": {},
+      "centroid": [
+       0.0045,
+       0.5,
+       0.35
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0.5,
+        0
+       ],
+       [
+        0,
+        0.5,
+        0.7
+       ],
+       [
+        0.009,
+        0.5,
+        0.7
+       ],
+       [
+        0.009,
+        0.5,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        1,
+        0
+       ],
+       "point": [
+        0,
+        0.5,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.35,
+      "attrs": {},
+      "centroid": [
+       0,
+       0.25,
+       0.3499999999999999
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0,
+        0.5,
+        0
+       ],
+       [
+        0,
+        0,
+        0
+       ],
+       [
+        0,
+        0,
+        0.7
+       ],
+       [
+        0,
+        0.5,
+        0.7
+       ]
+      ],
+      "plane": {
+       "normal": [
+        -1,
+        0,
+        0
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.006192,
+      "attrs": {},
+      "centroid": [
+       0.013473837209302324,
+       0.4799999999999999,
+       0.354203488372093
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.009,
+        0.48,
+        0.7
+       ],
+       [
+        0.018,
+        0.48,
+        0.7
+       ],
+       [
+        0.018,
+        0.48,
+        0.118
+       ],
+       [
+        0.012,
+        0.48,
+        0.118
+       ],
+       [
+        0.012,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0.48,
+        0
+       ],
+       [
+        0.009,
+        0.48,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        1,
+        0
+       ],
+       "point": [
+        0,
+        0.48,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.014000000000000012,
+      "attrs": {},
+      "centroid": [
+       0.009,
+       0.48999999999999994,
+       0.35000000000000003
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.009,
+        0.5,
+        0
+       ],
+       [
+        0.009,
+        0.5,
+        0.7
+       ],
+       [
+        0.009,
+        0.48,
+        0.7
+       ],
+       [
+        0.009,
+        0.48,
+        0
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.009,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.002879999999999999,
+      "attrs": {},
+      "centroid": [
+       0.015,
+       0.23999999999999994,
+       0.1
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.018,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.018,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0,
+        0.10000000000000002
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        1
+       ],
+       "point": [
+        0,
+        0,
+        0.10000000000000002
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.002879999999999999,
+      "attrs": {},
+      "centroid": [
+       0.015,
+       0.23999999999999994,
+       0.11799999999999998
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.012,
+        0.48,
+        0.118
+       ],
+       [
+        0.018,
+        0.48,
+        0.118
+       ],
+       [
+        0.018,
+        0,
+        0.118
+       ],
+       [
+        0.012,
+        0,
+        0.118
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        -1
+       ],
+       "point": [
+        0,
+        0,
+        0.118
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.008639999999999988,
+      "attrs": {},
+      "centroid": [
+       0.012,
+       0.23999999999999994,
+       0.10900000000000001
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_7",
+      "outer": [
+       [
+        0.012,
+        0,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0.48,
+        0.10000000000000002
+       ],
+       [
+        0.012,
+        0.48,
+        0.118
+       ],
+       [
+        0.012,
+        0,
+        0.118
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.012,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     }
+    ],
+    "generation": 32,
+    "object": "obj_7"
+   }
+  },
+  {
+   "method": "hew.query.signature",
+   "params": {
+    "path": [
+     "ins_e",
+     "obj_c"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "frame": {
+     "extents": [
+      0.56,
+      0.48,
+      0.018000000000000016
+     ],
+     "origin": [
+      0,
+      0.48,
+      0.318
+     ],
+     "x": [
+      1,
+      0,
+      0
+     ],
+     "y": [
+      0,
+      -1,
+      0
+     ],
+     "z": [
+      0,
+      0,
+      -1
+     ]
+    },
+    "generation": 32,
+    "mirror": "b170c167807e951ecf18273dc2114311befaa906bc30cbca68ec4fc4bf447271",
+    "shape": "b170c167807e951ecf18273dc2114311befaa906bc30cbca68ec4fc4bf447271",
+    "symmetric": true
+   }
+  },
+  {
+   "method": "hew.query.part_frame",
+   "params": {
+    "path": [
+     "ins_e",
+     "obj_c"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "extents": [
+     0.56,
+     0.48,
+     0.018000000000000016
+    ],
+    "generation": 32,
+    "mirrored": false,
+    "origin": [
+     0,
+     0.48,
+     0.318
+    ],
+    "source": "face",
+    "x": [
+     1,
+     0,
+     0
+    ],
+    "y": [
+     0,
+     -1,
+     0
+    ],
+    "z": [
+     0,
+     0,
+     -1
+    ]
+   }
+  },
+  {
+   "method": "hew.query.faces",
+   "params": {
+    "path": [
+     "ins_e",
+     "obj_c"
+    ]
+   },
+   "result": {
+    "epoch": 34,
     "faces": [
      {
       "area": 0.26880000000000004,
@@ -1643,7 +2122,7 @@
       "holes": [],
       "material": null,
       "material_effective": null,
-      "object": "obj_6",
+      "object": "obj_c",
       "outer": [
        [
         0,
@@ -1692,7 +2171,7 @@
       "holes": [],
       "material": null,
       "material_effective": null,
-      "object": "obj_6",
+      "object": "obj_c",
       "outer": [
        [
         0,
@@ -1741,7 +2220,7 @@
       "holes": [],
       "material": null,
       "material_effective": null,
-      "object": "obj_6",
+      "object": "obj_c",
       "outer": [
        [
         0,
@@ -1790,7 +2269,7 @@
       "holes": [],
       "material": null,
       "material_effective": null,
-      "object": "obj_6",
+      "object": "obj_c",
       "outer": [
        [
         0.56,
@@ -1839,7 +2318,7 @@
       "holes": [],
       "material": null,
       "material_effective": null,
-      "object": "obj_6",
+      "object": "obj_c",
       "outer": [
        [
         0.56,
@@ -1888,7 +2367,7 @@
       "holes": [],
       "material": null,
       "material_effective": null,
-      "object": "obj_6",
+      "object": "obj_c",
       "outer": [
        [
         0,
@@ -1927,20 +2406,401 @@
       "texture_pins": null
      }
     ],
-    "generation": 22,
-    "object": "obj_6"
+    "generation": 32,
+    "object": "obj_c"
    }
   },
   {
-   "method": "hew.attr.get",
+   "method": "hew.query.signature",
    "params": {
-    "target": "cmp_7",
-    "ns": "io.github.tinyworkshopdesign.tinycutlist"
+    "path": [
+     "ins_f",
+     "obj_c"
+    ]
    },
    "result": {
-    "io.github.tinyworkshopdesign.tinycutlist": {
-     "symmetrical": true
-    }
+    "epoch": 34,
+    "frame": {
+     "extents": [
+      0.56,
+      0.48,
+      0.018000000000000016
+     ],
+     "origin": [
+      2.44,
+      0.48,
+      0.318
+     ],
+     "x": [
+      1,
+      0,
+      0
+     ],
+     "y": [
+      0,
+      -1,
+      0
+     ],
+     "z": [
+      0,
+      0,
+      -1
+     ]
+    },
+    "generation": 32,
+    "mirror": "b170c167807e951ecf18273dc2114311befaa906bc30cbca68ec4fc4bf447271",
+    "shape": "b170c167807e951ecf18273dc2114311befaa906bc30cbca68ec4fc4bf447271",
+    "symmetric": true
+   }
+  },
+  {
+   "method": "hew.query.part_frame",
+   "params": {
+    "path": [
+     "ins_f",
+     "obj_c"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "extents": [
+     0.56,
+     0.48,
+     0.018000000000000016
+    ],
+    "generation": 32,
+    "mirrored": true,
+    "origin": [
+     2.44,
+     0.48,
+     0.318
+    ],
+    "source": "face",
+    "x": [
+     1,
+     0,
+     0
+    ],
+    "y": [
+     0,
+     -1,
+     0
+    ],
+    "z": [
+     0,
+     0,
+     -1
+    ]
+   }
+  },
+  {
+   "method": "hew.query.faces",
+   "params": {
+    "path": [
+     "ins_f",
+     "obj_c"
+    ]
+   },
+   "result": {
+    "epoch": 34,
+    "faces": [
+     {
+      "area": 0.26880000000000004,
+      "attrs": {},
+      "centroid": [
+       0.2800000000000001,
+       0.24,
+       0.29999999999999993
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_c",
+      "outer": [
+       [
+        0,
+        0.48,
+        0.3
+       ],
+       [
+        0.56,
+        0.48,
+        0.3
+       ],
+       [
+        0.56,
+        0,
+        0.3
+       ],
+       [
+        0,
+        0,
+        0.3
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        -1
+       ],
+       "point": [
+        0,
+        0,
+        0.3
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.26880000000000004,
+      "attrs": {},
+      "centroid": [
+       0.2800000000000001,
+       0.24,
+       0.31799999999999995
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_c",
+      "outer": [
+       [
+        0,
+        0,
+        0.318
+       ],
+       [
+        0.56,
+        0,
+        0.318
+       ],
+       [
+        0.56,
+        0.48,
+        0.318
+       ],
+       [
+        0,
+        0.48,
+        0.318
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        0,
+        1
+       ],
+       "point": [
+        0,
+        0,
+        0.318
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.010080000000000006,
+      "attrs": {},
+      "centroid": [
+       0.28,
+       0,
+       0.3089999999999999
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_c",
+      "outer": [
+       [
+        0,
+        0,
+        0.3
+       ],
+       [
+        0.56,
+        0,
+        0.3
+       ],
+       [
+        0.56,
+        0,
+        0.318
+       ],
+       [
+        0,
+        0,
+        0.318
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        -1,
+        0
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.008640000000000009,
+      "attrs": {},
+      "centroid": [
+       0.56,
+       0.23999999999999996,
+       0.30899999999999994
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_c",
+      "outer": [
+       [
+        0.56,
+        0,
+        0.3
+       ],
+       [
+        0.56,
+        0.48,
+        0.3
+       ],
+       [
+        0.56,
+        0.48,
+        0.318
+       ],
+       [
+        0.56,
+        0,
+        0.318
+       ]
+      ],
+      "plane": {
+       "normal": [
+        1,
+        0,
+        0
+       ],
+       "point": [
+        0.56,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.010080000000000006,
+      "attrs": {},
+      "centroid": [
+       0.28,
+       0.4799999999999999,
+       0.3089999999999999
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_c",
+      "outer": [
+       [
+        0.56,
+        0.48,
+        0.3
+       ],
+       [
+        0,
+        0.48,
+        0.3
+       ],
+       [
+        0,
+        0.48,
+        0.318
+       ],
+       [
+        0.56,
+        0.48,
+        0.318
+       ]
+      ],
+      "plane": {
+       "normal": [
+        0,
+        1,
+        0
+       ],
+       "point": [
+        0,
+        0.48,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     },
+     {
+      "area": 0.008640000000000009,
+      "attrs": {},
+      "centroid": [
+       0,
+       0.23999999999999996,
+       0.30899999999999994
+      ],
+      "holes": [],
+      "material": null,
+      "material_effective": null,
+      "object": "obj_c",
+      "outer": [
+       [
+        0,
+        0.48,
+        0.3
+       ],
+       [
+        0,
+        0,
+        0.3
+       ],
+       [
+        0,
+        0,
+        0.318
+       ],
+       [
+        0,
+        0.48,
+        0.318
+       ]
+      ],
+      "plane": {
+       "normal": [
+        -1,
+        0,
+        0
+       ],
+       "point": [
+        0,
+        0,
+        0
+       ]
+      },
+      "surface": null,
+      "texture_pins": null
+     }
+    ],
+    "generation": 32,
+    "object": "obj_c"
    }
   }
  ]

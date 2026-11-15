@@ -12,7 +12,7 @@ import { SCENES } from "../scenes.ts";
 for (const scene of SCENES) {
   test(`${scene.id} ${scene.title}`, async () => {
     const recording: Recording = JSON.parse(readFileSync(new URL(`../fixtures/${scene.id}.json`, import.meta.url), "utf8"));
-    const res = await countParts(new ReplayHost(recording), { pieces: true });
+    const res = await countParts(new ReplayHost(recording));
     const errors = scene.check(res);
     assert.deepEqual(errors, [], `${errors.join("\n")}\n\n${formatMarkdown(`${scene.id} (recorded on ${recording.hew})`, res)}`);
   });

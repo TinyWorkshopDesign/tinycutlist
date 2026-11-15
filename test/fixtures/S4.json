@@ -1,6 +1,6 @@
 {
  "hew": "hew-cli 1.5.0-pre.plugin-m2",
- "note": "Hardware, machining, assembly, hidden and loose",
+ "note": "An edge band, a hidden shelf, a loose board and a door in a cabinet",
  "exchanges": [
   {
    "method": "hew.query.occurrences",
@@ -8,8 +8,8 @@
     "include_hidden": false
    },
    "result": {
-    "epoch": 60,
-    "generation": 58,
+    "epoch": 42,
+    "generation": 40,
     "occurrences": [
      {
       "definition": null,
@@ -18,10 +18,10 @@
       "family": null,
       "family_closed": null,
       "hidden": false,
-      "id": "obj_1a",
+      "id": "obj_e",
       "kind": "object",
-      "material": "mat_2",
-      "material_effective": "mat_2",
+      "material": null,
+      "material_effective": null,
       "members": {
        "groups": [],
        "instances": [],
@@ -50,331 +50,11 @@
       ]
      },
      {
-      "definition": "cmp_9",
-      "definition_name": "Hinge",
-      "depth": 0,
-      "hidden": false,
-      "id": "ins_a",
-      "kind": "instance",
-      "linked": false,
-      "material": "mat_0",
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": [
-        "obj_4",
-        "obj_6",
-        "obj_8"
-       ]
-      },
-      "mirrored": false,
-      "name": null,
-      "parent": null,
-      "path": [],
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 1,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_4",
-      "kind": "object",
-      "material": null,
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Cup",
-      "parent": null,
-      "path": [
-       "ins_a"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 1,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_6",
-      "kind": "object",
-      "material": null,
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Arm",
-      "parent": null,
-      "path": [
-       "ins_a"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 1,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_8",
-      "kind": "object",
-      "material": null,
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Plate",
-      "parent": null,
-      "path": [
-       "ins_a"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": "cmp_9",
-      "definition_name": "Hinge",
-      "depth": 0,
-      "hidden": false,
-      "id": "ins_b",
-      "kind": "instance",
-      "linked": false,
-      "material": "mat_0",
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": [
-        "obj_4",
-        "obj_6",
-        "obj_8"
-       ]
-      },
-      "mirrored": false,
-      "name": null,
-      "parent": null,
-      "path": [],
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0.2,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 1,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_4",
-      "kind": "object",
-      "material": null,
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Cup",
-      "parent": null,
-      "path": [
-       "ins_b"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0.2,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 1,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_6",
-      "kind": "object",
-      "material": null,
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Arm",
-      "parent": null,
-      "path": [
-       "ins_b"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0.2,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 1,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_8",
-      "kind": "object",
-      "material": null,
-      "material_effective": "mat_0",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Plate",
-      "parent": null,
-      "path": [
-       "ins_b"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0.2,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": "cmp_12",
+      "definition": "cmp_6",
       "definition_name": "Cabinet",
       "depth": 0,
       "hidden": false,
-      "id": "ins_13",
+      "id": "ins_7",
       "kind": "instance",
       "linked": false,
       "material": null,
@@ -382,7 +62,7 @@
       "members": {
        "groups": [],
        "instances": [
-        "ins_11"
+        "ins_5"
        ],
        "objects": []
       },
@@ -408,11 +88,11 @@
       ]
      },
      {
-      "definition": "cmp_10",
+      "definition": "cmp_4",
       "definition_name": "Door",
       "depth": 1,
       "hidden": false,
-      "id": "ins_11",
+      "id": "ins_5",
       "kind": "instance",
       "linked": false,
       "material": null,
@@ -421,15 +101,14 @@
        "groups": [],
        "instances": [],
        "objects": [
-        "obj_d",
-        "obj_f"
+        "obj_3"
        ]
       },
       "mirrored": false,
       "name": null,
       "parent": null,
       "path": [
-       "ins_13"
+       "ins_7"
       ],
       "tags": [],
       "user_hidden": false,
@@ -455,10 +134,10 @@
       "family": null,
       "family_closed": null,
       "hidden": false,
-      "id": "obj_d",
+      "id": "obj_3",
       "kind": "object",
-      "material": "mat_2",
-      "material_effective": "mat_2",
+      "material": "mat_0",
+      "material_effective": "mat_0",
       "members": {
        "groups": [],
        "instances": [],
@@ -468,49 +147,8 @@
       "name": "Door",
       "parent": null,
       "path": [
-       "ins_13",
-       "ins_11"
-      ],
-      "solid": true,
-      "tags": [],
-      "user_hidden": false,
-      "world_pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0
-      ]
-     },
-     {
-      "definition": null,
-      "definition_name": null,
-      "depth": 2,
-      "family": null,
-      "family_closed": null,
-      "hidden": false,
-      "id": "obj_f",
-      "kind": "object",
-      "material": "mat_1",
-      "material_effective": "mat_1",
-      "members": {
-       "groups": [],
-       "instances": [],
-       "objects": []
-      },
-      "mirrored": false,
-      "name": "Groove",
-      "parent": null,
-      "path": [
-       "ins_13",
-       "ins_11"
+       "ins_7",
+       "ins_5"
       ],
       "solid": true,
       "tags": [],
@@ -539,69 +177,37 @@
    "result": {
     "components": [
      {
-      "id": "cmp_9",
-      "instance_count": 2,
-      "name": "Hinge",
-      "usage": 2
-     },
-     {
-      "id": "cmp_10",
+      "id": "cmp_4",
       "instance_count": 1,
       "name": "Door",
       "usage": 1
      },
      {
-      "id": "cmp_12",
+      "id": "cmp_6",
       "instance_count": 1,
       "name": "Cabinet",
       "usage": 1
      },
      {
-      "id": "cmp_16",
+      "id": "cmp_a",
       "instance_count": 1,
       "name": "Hidden shelf",
       "usage": 1
      }
     ],
     "document": {
-     "components": 4,
+     "components": 3,
      "groups": 0,
      "guides": 0,
-     "instances": 4,
-     "materials": 3,
+     "instances": 2,
+     "materials": 2,
      "objects": 1,
      "sketches": 0
     },
-    "epoch": 60,
-    "generation": 58,
+    "epoch": 42,
+    "generation": 40,
     "guides": [],
     "materials": [
-     {
-      "color": {
-       "a": 255,
-       "b": 160,
-       "g": 150,
-       "r": 150
-      },
-      "has_texture": false,
-      "id": "mat_0",
-      "name": "Steel",
-      "texture": null,
-      "usage": 2
-     },
-     {
-      "color": {
-       "a": 255,
-       "b": 0,
-       "g": 0,
-       "r": 255
-      },
-      "has_texture": false,
-      "id": "mat_1",
-      "name": "Machining",
-      "texture": null,
-      "usage": 1
-     },
      {
       "color": {
        "a": 255,
@@ -610,17 +216,30 @@
        "r": 220
       },
       "has_texture": false,
-      "id": "mat_2",
+      "id": "mat_0",
       "name": "Plywood 18",
       "texture": null,
-      "usage": 3
+      "usage": 7
+     },
+     {
+      "color": {
+       "a": 255,
+       "b": 90,
+       "g": 140,
+       "r": 180
+      },
+      "has_texture": false,
+      "id": "mat_1",
+      "name": "Oak edge",
+      "texture": null,
+      "usage": 1
      }
     ],
     "sketches": [],
     "tags": [
      {
       "hidden": true,
-      "id": "tag_18",
+      "id": "tag_c",
       "path": [
        "Spare"
       ]
@@ -642,9 +261,9 @@
       },
       "health": "solid",
       "hidden": false,
-      "id": "obj_1a",
+      "id": "obj_e",
       "kind": "object",
-      "material": "mat_2",
+      "material": null,
       "name": "Loose top",
       "parent": null,
       "tags": [],
@@ -654,100 +273,20 @@
      {
       "bbox": {
        "max": [
-        0.115,
-        0.035,
-        0.012
-       ],
-       "min": [
-        0,
-        0,
-        0
-       ]
-      },
-      "def": "cmp_9",
-      "health": "solid",
-      "hidden": false,
-      "id": "ins_a",
-      "kind": "instance",
-      "material": "mat_0",
-      "mirrored": false,
-      "name": "Hinge",
-      "parent": null,
-      "pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0
-      ],
-      "tags": [],
-      "user_hidden": false,
-      "watertight": true
-     },
-     {
-      "bbox": {
-       "max": [
-        0.115,
-        0.23500000000000001,
-        0.012
-       ],
-       "min": [
-        0,
-        0.2,
-        0
-       ]
-      },
-      "def": "cmp_9",
-      "health": "solid",
-      "hidden": false,
-      "id": "ins_b",
-      "kind": "instance",
-      "material": "mat_0",
-      "mirrored": false,
-      "name": "Hinge",
-      "parent": null,
-      "pose": [
-       1,
-       0,
-       0,
-       0,
-       0,
-       1,
-       0,
-       0.2,
-       0,
-       0,
-       1,
-       0
-      ],
-      "tags": [],
-      "user_hidden": false,
-      "watertight": true
-     },
-     {
-      "bbox": {
-       "max": [
         1.7,
-        0.45999999999999996,
-        0.036
+        0.45,
+        0.018
        ],
        "min": [
         1,
-        -0.01,
+        0,
         0
        ]
       },
-      "def": "cmp_12",
+      "def": "cmp_6",
       "health": "solid",
       "hidden": false,
-      "id": "ins_13",
+      "id": "ins_7",
       "kind": "instance",
       "material": null,
       "mirrored": false,
@@ -784,10 +323,10 @@
         0
        ]
       },
-      "def": "cmp_16",
+      "def": "cmp_a",
       "health": "solid",
       "hidden": true,
-      "id": "ins_17",
+      "id": "ins_b",
       "kind": "instance",
       "material": null,
       "mirrored": false,
@@ -826,7 +365,7 @@
    },
    "result": {
     "io.github.tinyworkshopdesign.tinycutlist": {
-     "type": "hardware"
+     "type": "sheet_good"
     }
    }
   },
@@ -838,49 +377,74 @@
    },
    "result": {
     "io.github.tinyworkshopdesign.tinycutlist": {
-     "type": "machining"
+     "type": "edge"
     }
    }
   },
   {
-   "method": "hew.attr.get",
+   "method": "hew.query.signature",
    "params": {
-    "target": "mat_2",
-    "ns": "io.github.tinyworkshopdesign.tinycutlist"
+    "path": [
+     "obj_e"
+    ]
    },
    "result": {
-    "io.github.tinyworkshopdesign.tinycutlist": {
-     "type": "sheet_good"
-    }
+    "epoch": 42,
+    "frame": {
+     "extents": [
+      0.7999999999999998,
+      0.4,
+      0.025
+     ],
+     "origin": [
+      4,
+      0.4,
+      0.025
+     ],
+     "x": [
+      1,
+      0,
+      0
+     ],
+     "y": [
+      0,
+      -1,
+      0
+     ],
+     "z": [
+      0,
+      0,
+      -1
+     ]
+    },
+    "generation": 40,
+    "mirror": "77ac6d3de94d4d648d72b4322736ca5452bcdc8f9834bd358b2d31a5ec90af66",
+    "shape": "77ac6d3de94d4d648d72b4322736ca5452bcdc8f9834bd358b2d31a5ec90af66",
+    "symmetric": true
    }
   },
   {
    "method": "hew.query.part_frame",
    "params": {
     "path": [
-     "ins_13",
-     "ins_11"
-    ],
-    "scope": "own",
-    "exclude": [
-     "obj_f"
+     "obj_e"
     ]
    },
    "result": {
-    "epoch": 60,
+    "epoch": 42,
     "extents": [
-     0.7,
-     0.45,
-     0.018
+     0.7999999999999998,
+     0.4,
+     0.025
     ],
-    "generation": 58,
+    "generation": 40,
     "mirrored": false,
     "origin": [
-     0,
-     0,
-     0
+     4,
+     0.4,
+     0.025
     ],
-    "source": "definition",
+    "source": "face",
     "x": [
      1,
      0,
@@ -888,13 +452,13 @@
     ],
     "y": [
      0,
-     1,
+     -1,
      0
     ],
     "z": [
      0,
      0,
-     1
+     -1
     ]
    }
   },
@@ -902,44 +466,42 @@
    "method": "hew.query.faces",
    "params": {
     "path": [
-     "ins_13",
-     "ins_11",
-     "obj_d"
+     "obj_e"
     ]
    },
    "result": {
-    "epoch": 60,
+    "epoch": 42,
     "faces": [
      {
-      "area": 0.31500000000000006,
+      "area": 0.31999999999999984,
       "attrs": {},
       "centroid": [
-       1.35,
-       0.22499999999999998,
+       4.3999999999999995,
+       0.19999999999999998,
        0
       ],
       "holes": [],
-      "material": null,
-      "material_effective": "mat_2",
-      "object": "obj_d",
+      "material": "mat_0",
+      "material_effective": "mat_0",
+      "object": "obj_e",
       "outer": [
        [
-        1,
-        0.45,
+        4,
+        0.4,
         0
        ],
        [
-        1.7,
-        0.45,
+        4.8,
+        0.4,
         0
        ],
        [
-        1.7,
+        4.8,
         0,
         0
        ],
        [
-        1,
+        4,
         0,
         0
        ]
@@ -960,37 +522,37 @@
       "texture_pins": null
      },
      {
-      "area": 0.31500000000000006,
+      "area": 0.31999999999999984,
       "attrs": {},
       "centroid": [
-       1.35,
-       0.22499999999999998,
-       0.017999999999999995
+       4.3999999999999995,
+       0.19999999999999998,
+       0.024999999999999998
       ],
       "holes": [],
-      "material": null,
-      "material_effective": "mat_2",
-      "object": "obj_d",
+      "material": "mat_0",
+      "material_effective": "mat_0",
+      "object": "obj_e",
       "outer": [
        [
-        1,
+        4,
         0,
-        0.018
+        0.025
        ],
        [
-        1.7,
+        4.8,
         0,
-        0.018
+        0.025
        ],
        [
-        1.7,
-        0.45,
-        0.018
+        4.8,
+        0.4,
+        0.025
        ],
        [
-        1,
-        0.45,
-        0.018
+        4,
+        0.4,
+        0.025
        ]
       ],
       "plane": {
@@ -1002,44 +564,44 @@
        "point": [
         0,
         0,
-        0.018
+        0.025
        ]
       },
       "surface": null,
       "texture_pins": null
      },
      {
-      "area": 0.012599999999999995,
+      "area": 0.01999999999999999,
       "attrs": {},
       "centroid": [
-       1.35,
+       4.3999999999999995,
        0,
-       0.009
+       0.012499999999999999
       ],
       "holes": [],
-      "material": null,
-      "material_effective": "mat_2",
-      "object": "obj_d",
+      "material": "mat_0",
+      "material_effective": "mat_0",
+      "object": "obj_e",
       "outer": [
        [
-        1,
+        4,
         0,
         0
        ],
        [
-        1.7,
+        4.8,
         0,
         0
        ],
        [
-        1.7,
+        4.8,
         0,
-        0.018
+        0.025
        ],
        [
-        1,
+        4,
         0,
-        0.018
+        0.025
        ]
       ],
       "plane": {
@@ -1058,37 +620,37 @@
       "texture_pins": null
      },
      {
-      "area": 0.0081,
+      "area": 0.010000000000000002,
       "attrs": {},
       "centroid": [
-       1.6999999999999997,
-       0.225,
-       0.009
+       4.8,
+       0.19999999999999998,
+       0.012499999999999999
       ],
       "holes": [],
-      "material": null,
-      "material_effective": "mat_2",
-      "object": "obj_d",
+      "material": "mat_1",
+      "material_effective": "mat_1",
+      "object": "obj_e",
       "outer": [
        [
-        1.7,
+        4.8,
         0,
         0
        ],
        [
-        1.7,
-        0.45,
+        4.8,
+        0.4,
         0
        ],
        [
-        1.7,
-        0.45,
-        0.018
+        4.8,
+        0.4,
+        0.025
        ],
        [
-        1.7,
+        4.8,
         0,
-        0.018
+        0.025
        ]
       ],
       "plane": {
@@ -1098,7 +660,7 @@
         0
        ],
        "point": [
-        1.7,
+        4.8,
         0,
         0
        ]
@@ -1107,37 +669,37 @@
       "texture_pins": null
      },
      {
-      "area": 0.012599999999999997,
+      "area": 0.01999999999999999,
       "attrs": {},
       "centroid": [
-       1.35,
-       0.45,
-       0.008999999999999998
+       4.3999999999999995,
+       0.39999999999999997,
+       0.012499999999999999
       ],
       "holes": [],
-      "material": null,
-      "material_effective": "mat_2",
-      "object": "obj_d",
+      "material": "mat_0",
+      "material_effective": "mat_0",
+      "object": "obj_e",
       "outer": [
        [
-        1.7,
-        0.45,
+        4.8,
+        0.4,
         0
        ],
        [
-        1,
-        0.45,
+        4,
+        0.4,
         0
        ],
        [
-        1,
-        0.45,
-        0.018
+        4,
+        0.4,
+        0.025
        ],
        [
-        1.7,
-        0.45,
-        0.018
+        4.8,
+        0.4,
+        0.025
        ]
       ],
       "plane": {
@@ -1148,7 +710,7 @@
        ],
        "point": [
         0,
-        0.45,
+        0.4,
         0
        ]
       },
@@ -1156,37 +718,37 @@
       "texture_pins": null
      },
      {
-      "area": 0.0081,
+      "area": 0.010000000000000002,
       "attrs": {},
       "centroid": [
-       1,
-       0.225,
-       0.009
+       4,
+       0.19999999999999998,
+       0.012499999999999999
       ],
       "holes": [],
-      "material": null,
-      "material_effective": "mat_2",
-      "object": "obj_d",
+      "material": "mat_0",
+      "material_effective": "mat_0",
+      "object": "obj_e",
       "outer": [
        [
-        1,
-        0.45,
+        4,
+        0.4,
         0
        ],
        [
-        1,
+        4,
         0,
         0
        ],
        [
-        1,
+        4,
         0,
-        0.018
+        0.025
        ],
        [
-        1,
-        0.45,
-        0.018
+        4,
+        0.4,
+        0.025
        ]
       ],
       "plane": {
@@ -1196,7 +758,7 @@
         0
        ],
        "point": [
-        1,
+        4,
         0,
         0
        ]
@@ -1205,30 +767,76 @@
       "texture_pins": null
      }
     ],
-    "generation": 58,
-    "object": "obj_d"
+    "generation": 40,
+    "object": "obj_e"
+   }
+  },
+  {
+   "method": "hew.query.signature",
+   "params": {
+    "path": [
+     "ins_7",
+     "ins_5",
+     "obj_3"
+    ]
+   },
+   "result": {
+    "epoch": 42,
+    "frame": {
+     "extents": [
+      0.7,
+      0.45,
+      0.018
+     ],
+     "origin": [
+      1,
+      0.45,
+      0.018
+     ],
+     "x": [
+      1,
+      0,
+      0
+     ],
+     "y": [
+      0,
+      -1,
+      0
+     ],
+     "z": [
+      0,
+      0,
+      -1
+     ]
+    },
+    "generation": 40,
+    "mirror": "f63453e6f36e2dc898c90031ee9b19f273418aacd7d7efce61d9f7e14ccc2872",
+    "shape": "f63453e6f36e2dc898c90031ee9b19f273418aacd7d7efce61d9f7e14ccc2872",
+    "symmetric": true
    }
   },
   {
    "method": "hew.query.part_frame",
    "params": {
     "path": [
-     "obj_1a"
+     "ins_7",
+     "ins_5",
+     "obj_3"
     ]
    },
    "result": {
-    "epoch": 60,
+    "epoch": 42,
     "extents": [
-     0.7999999999999998,
-     0.4,
-     0.025
+     0.7,
+     0.45,
+     0.018
     ],
-    "generation": 58,
+    "generation": 40,
     "mirrored": false,
     "origin": [
-     4,
-     0.4,
-     0.025
+     1,
+     0.45,
+     0.018
     ],
     "source": "face",
     "x": [

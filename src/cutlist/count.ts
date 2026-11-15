@@ -1,28 +1,26 @@
-// Part counting over Hew's `occurrences`, following the part model written
-// down in docs/concept-mapping.md (§1 and §2). This is the component-based
-// rule; the planned change to "a part is a closed solid" is in the README.
+// Part counting over Hew's `occurrences` (M2).
 //
-//   - Hew reports facts, the plugin applies the rule.
-//   - A part is any component placement with solids of its own, at any depth,
-//     sized from those solids only (`scope: "own"`). Groups are transparent:
-//     their solids count toward the enclosing component.
-//   - Identical parts are counted by definition (linked copies are definitions
-//     too), split on material, size and mirroring (unless `symmetrical`).
-//   - Hardware (a placement painted with a hardware material) is one item;
-//     machining bodies are left out of the size; open objects are reported.
-//   - Loose objects (no definition, never copied): listed as a part
-//     placed once unless `loose: false`.
+//   - A part is a closed solid: every Object Hew reports as `solid`, wherever
+//     it sits (loose, in a group, or inside a component, at any depth).
+//     Groups and components only organise.
+//   - One row per solid: linked copies share their solid, so a board copied
+//     three times is one row ×4. Rows split on material, size and handedness.
+//   - Handedness comes from Hew's `signature`: a mirrored placement is a
+//     separate row only if the solid isn't its own mirror image.
+//   - Objects that aren't closed solids are reported, not measured.
+//   - Solids that look identical but aren't linked (same `shape` hash) are
+//     only suggested for linking.
+//   - Boards glued face to face (laminated) or edge to edge (a panel) are
+//     still separate parts, one per board, and are also listed as a glue-up,
+//     so the grain of the boards can be matched before gluing.
 
 import type { Host } from "../host/host.ts";
-import { locator, locatorKey, type Members, type Occurrence } from "../model.ts";
-import { NS, TYPE_ORDER, VIRTUAL, readMaterials, type MaterialType } from "./materials.ts";
+import { locator, locatorKey, type Occurrence } from "../model.ts";
+import { TYPE_ORDER, VIRTUAL, readMaterials, type MaterialType } from "./materials.ts";
+import { findGlueUps, type Box, type Frame } from "./glue.ts";
 
 export type CountOptions = {
-  /** List loose objects (no definition) as parts placed once. Default true. */
-  loose?: boolean;
   includeHidden?: boolean;
-  /** Also list the solids of multi-solid parts (glued-up blanks). */
-  pieces?: boolean;
   /** Longest extent first. Default true. */
   autoOrient?: boolean;
   /** Material name → type, for materials the model doesn't type. */
@@ -32,29 +30,41 @@ export type CountOptions = {
 export type Part = {
   label: string;
   name: string;
-  kind: "component" | "loose";
-  definition: string | null;
+  /** The solid every placement of this row shares. */
+  object: string;
   material: string | null;
   materialType: MaterialType;
   /** Millimeters, rounded to 0.1. */
   size: [number, number, number];
+  /** A left or right hand of a part that isn't its own mirror image. */
   mirrored: boolean;
   count: number;
-  /** Own solids: more than one is a glued-up blank. */
-  solids: number;
-  /** Placements nested inside this part. */
-  nested: number;
   placements: string[][];
-  pieces?: { name: string | null; size: [number, number, number] }[];
+  /** Names the placements carry besides the part's own (renamed linked copies). */
+  otherNames: string[];
+  /** Labels of the glue-ups this part goes into. */
+  glueUps: string[];
+};
+
+export type GlueUp = {
+  label: string;
+  /** The component or group holding the boards, if they share one. */
+  name: string;
+  kind: "laminated" | "edge-glued" | "mixed";
+  /** How many identical glue-ups the model holds. */
+  count: number;
+  /** One part label per board, in order across the blank. */
+  boards: string[];
+  /** The blank's size in millimeters, rounded to 0.1. */
+  size: [number, number, number];
+  placements: string[][][];
 };
 
 export type CutList = {
   parts: Part[];
-  hardware: { name: string; definition: string; count: number }[];
+  glueUps: GlueUp[];
   open: { name: string | null; id: string; kind: "open" | "split"; count: number }[];
-  machining: number;
-  assemblies: { name: string; definition: string; count: number }[];
-  /** Rows of different definitions with the same material, size and mirroring: candidates for Hew's "link them?". */
+  /** Rows of different solids with the same shape and material: candidates for Hew's "link them?". */
   lookAlike: string[][];
 };
 
@@ -71,83 +81,27 @@ export function letters(n: number): string {
   return s;
 }
 
+type Placement = { row: Occurrence; loc: string[]; part: Part; frame: Frame };
+
 export async function countParts(host: Host, opts: CountOptions = {}): Promise<CutList> {
-  const { loose = true, includeHidden = false, pieces = false, autoOrient = true } = opts;
+  const { includeHidden = false, autoOrient = true } = opts;
   const rows: Occurrence[] = (await host.query("hew.query.occurrences", { include_hidden: includeHidden })).occurrences;
   const materials = await readMaterials(host, opts.types);
+  const byLoc = new Map<string, Occurrence>(rows.map((r) => [locatorKey(locator(r)), r]));
 
-  // `solid` and `family` on object rows
-  const openKind = new Map<string, "open" | "split">();
-  for (const r of rows) if (r.kind === "object" && r.solid === false) openKind.set(r.id, r.family != null ? "split" : "open");
-
-  // `members` on instance and group rows. `path` holds instances only: the members of an
-  // instance have path [...path, instance], the members of a group have the group's own path.
-  const byLoc = new Map<string, Occurrence>();
-  for (const r of rows) byLoc.set(locatorKey(locator(r)), r);
-  const ownOf = (c: Occurrence): { objects: Occurrence[]; instances: Occurrence[] } => {
-    const m: Members | undefined = c.members;
-    if (!m) throw new Error(`row ${c.id} has no members: this needs Hew M2 or later`);
-    const base = c.kind === "group" ? c.path : locator(c);
-    const out = { objects: [] as Occurrence[], instances: [] as Occurrence[] };
-    const at = (id: string) => byLoc.get(locatorKey([...base, id]));
-    for (const id of m.objects) {
-      const r = at(id);
-      if (r) out.objects.push(r);
-    }
-    for (const id of m.instances) {
-      const r = at(id);
-      if (r) out.instances.push(r);
-    }
-    for (const id of m.groups) {
-      const g = at(id);
-      if (!g) continue;
-      const sub = ownOf(g); // groups are transparent
-      out.objects.push(...sub.objects);
-      out.instances.push(...sub.instances);
-    }
-    return out;
-  };
-
-  // hardware placements are single items: nothing under them is listed
-  const hardwareIds = new Set(rows.filter((r) => r.kind === "instance" && materials.type(r.material) === "hardware").map((r) => r.id));
-  const underHardware = (r: Occurrence) => r.path.some((id) => hardwareIds.has(id));
-
-  // definition-local faces, the same for every placement of a definition
-  const faceCache = new Map<string, any[]>();
-  async function facesOf(o: Occurrence) {
-    const k = `${o.path.length ? o.path[o.path.length - 1] : ""}/${o.id}`;
-    if (!faceCache.has(k)) faceCache.set(k, (await host.query("hew.query.faces", { path: locator(o) })).faces);
-    return faceCache.get(k)!;
-  }
-
-  // OpenCutList's order: the placement's own material (not edge or veneer), else votes over its own solids' faces, else inherited
-  async function partMaterial(c: Occurrence, solids: Occurrence[]): Promise<string | null> {
-    if (c.material && !VIRTUAL.has(materials.type(c.material))) return c.material;
+  // Hew's own rule, as the user sees it: the solid's base material, else its faces' effective
+  // materials (painted faces, then the nearest painted placement), edges and veneers left out
+  async function partMaterial(o: Occurrence, loc: string[]): Promise<string | null> {
+    if (o.material && !VIRTUAL.has(materials.type(o.material))) return o.material;
     const votes = new Map<string, number>();
-    for (const o of solids) {
-      for (const f of await facesOf(o)) {
-        const m = f.material ?? o.material;
-        if (m && !VIRTUAL.has(materials.type(m))) votes.set(m, (votes.get(m) ?? 0) + 1);
-      }
+    for (const f of (await host.query("hew.query.faces", { path: loc })).faces) {
+      const m = f.material_effective ?? f.material ?? null;
+      if (m && !VIRTUAL.has(materials.type(m))) votes.set(m, (votes.get(m) ?? 0) + 1);
     }
     const best = [...votes].sort(
       (a, b) => b[1] - a[1] || TYPE_ORDER.indexOf(materials.type(a[0])) - TYPE_ORDER.indexOf(materials.type(b[0])),
     )[0];
-    return best ? best[0] : c.material_effective;
-  }
-
-  const symmetricalCache = new Map<string, boolean>();
-  async function symmetrical(def: string): Promise<boolean> {
-    if (!symmetricalCache.has(def)) {
-      let v = false;
-      try {
-        v = /"symmetrical"\s*:\s*true/.test(JSON.stringify(await host.query("hew.attr.get", { target: def, ns: NS })));
-      } catch {
-        // no dictionary
-      }
-      symmetricalCache.set(def, v);
-    }
-    return symmetricalCache.get(def)!;
+    return best ? best[0] : o.material_effective;
   }
 
   const oriented = (extentsM: number[]): [number, number, number] => {
@@ -157,107 +111,96 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
   };
 
   const parts = new Map<string, Part>();
-  const hardware = new Map<string, { name: string; definition: string; count: number }>();
-  const assemblies = new Map<string, { name: string; definition: string; count: number }>();
   const open = new Map<string, { name: string | null; id: string; kind: "open" | "split"; count: number }>();
-  let machining = 0;
+  const shapes = new Map<string, string>(); // part key → shape hash
+  const placements: Placement[] = [];
 
-  for (const c of rows) {
-    if (c.kind !== "instance" || underHardware(c)) continue;
-    // OpenCutList names a part after its definition; the placement's own name is a fallback
-    const name = c.definition_name || c.name || "Part";
-    if (hardwareIds.has(c.id)) {
-      const h = hardware.get(c.definition!) ?? { name, definition: c.definition!, count: 0 };
-      h.count++;
-      hardware.set(c.definition!, h);
+  for (const o of rows) {
+    if (o.kind !== "object") continue;
+    if (o.solid === undefined) throw new Error(`row ${o.id} has no \`solid\` field: this needs Hew M2 or later`);
+    const holder = o.path.length ? byLoc.get(locatorKey(o.path)) : undefined;
+    const name = o.name || holder?.definition_name || "Part";
+    if (!o.solid) {
+      const e = open.get(o.id) ?? { name, id: o.id, kind: o.family != null ? "split" as const : "open" as const, count: 0 };
+      e.count++;
+      open.set(o.id, e);
       continue;
     }
-    const own = ownOf(c);
-    const solids: Occurrence[] = [];
-    const excluded: string[] = [];
-    for (const o of own.objects) {
-      if (materials.type(o.material) === "machining") {
-        machining++;
-        excluded.push(o.id);
-        continue;
-      }
-      if (openKind.has(o.id)) {
-        const k = `${c.definition}/${o.id}`;
-        const e = open.get(k) ?? { name: o.name ?? name, id: o.id, kind: openKind.get(o.id)!, count: 0 };
-        e.count++;
-        open.set(k, e);
-        excluded.push(o.id);
-        continue;
-      }
-      solids.push(o);
-    }
-    if (!solids.length) {
-      if (own.instances.length) {
-        const a = assemblies.get(c.definition!) ?? { name, definition: c.definition!, count: 0 };
-        a.count++;
-        assemblies.set(c.definition!, a);
-      }
-      continue;
-    }
-    // the part frame over the placement's own solids: `scope: "own"` still takes every
-    // own Object, open surfaces included, so machining bodies and open objects are excluded
-    const pf = await host.query("hew.query.part_frame", { path: locator(c), scope: "own", ...(excluded.length ? { exclude: excluded } : {}) });
+    const loc = locator(o);
+    const sig = await host.query("hew.query.signature", { path: loc });
+    // part_frame honours a frame the user set on the solid (grain direction); the signature's doesn't
+    const pf = await host.query("hew.query.part_frame", { path: loc });
     const size = oriented(pf.extents);
-    const material = await partMaterial(c, solids);
-    const mirrored = c.mirrored && !(await symmetrical(c.definition!));
-    const k = JSON.stringify([c.definition, material, size, mirrored]);
+    const material = await partMaterial(o, loc);
+    const mirrored = o.mirrored && !sig.symmetric;
+    const k = JSON.stringify([o.id, material, size, mirrored]);
     let p = parts.get(k);
     if (!p) {
       p = {
-        label: "", name, kind: "component", definition: c.definition, material: materials.name(material),
-        materialType: materials.type(material), size, mirrored, count: 0, solids: solids.length,
-        nested: own.instances.length, placements: [],
+        label: "", name, object: o.id, material: materials.name(material), materialType: materials.type(material),
+        size, mirrored, count: 0, placements: [], otherNames: [], glueUps: [],
       };
-      if (pieces && solids.length > 1) {
-        p.pieces = [];
-        for (const o of solids) {
-          const opf = await host.query("hew.query.part_frame", { path: locator(o) });
-          p.pieces.push({ name: o.name, size: opf.extents.map((v: number) => r1(v * 1000)) as [number, number, number] });
-        }
-      }
       parts.set(k, p);
+      shapes.set(k, `${sig.shape}/${material}`);
     }
     p.count++;
-    p.placements.push(locator(c));
-  }
-
-  // loose objects: no definition (listed as a part placed once)
-  if (loose) {
-    for (const o of rows) {
-      if (o.kind !== "object" || o.path.length || materials.type(o.material) === "machining") continue;
-      if (openKind.has(o.id)) {
-        open.set(o.id, { name: o.name, id: o.id, kind: openKind.get(o.id)!, count: 1 });
-        continue;
-      }
-      const pf = await host.query("hew.query.part_frame", { path: [o.id] });
-      parts.set(o.id, {
-        label: "", name: o.name || "Loose solid", kind: "loose", definition: null,
-        material: materials.name(o.material), materialType: materials.type(o.material),
-        size: oriented(pf.extents), mirrored: false, count: 1, solids: 1, nested: 0, placements: [[o.id]],
-      });
-    }
+    p.placements.push(loc);
+    // a linked copy can be renamed on its own: the name sits on its placement
+    const own = holder?.name;
+    if (own && own !== p.name && !p.otherNames.includes(own)) p.otherNames.push(own);
+    placements.push({ row: o, loc, part: p, frame: sig.frame });
   }
 
   const list = [...parts.values()].sort(
-    (a, b) => (a.material ?? "~").localeCompare(b.material ?? "~") || b.size[2] - a.size[2] || b.size[0] - a.size[0] || b.size[1] - a.size[1],
+    (a, b) => (a.material ?? "~").localeCompare(b.material ?? "~") || b.size[2] - a.size[2] || b.size[0] - a.size[0] || b.size[1] - a.size[1] || a.name.localeCompare(b.name),
   );
   list.forEach((p, i) => (p.label = letters(i)));
+
+  // look-alikes: the same shape and material, but different solids
   const alike = new Map<string, string[]>();
-  for (const p of list) {
-    const k = JSON.stringify([p.material, p.size, p.mirrored]);
-    alike.set(k, [...(alike.get(k) ?? []), p.label]);
+  for (const [k, p] of parts) {
+    const s = shapes.get(k)!;
+    alike.set(s, [...(alike.get(s) ?? []), p.label]);
   }
-  return {
-    parts: list,
-    hardware: [...hardware.values()],
-    open: [...open.values()],
-    machining,
-    assemblies: [...assemblies.values()],
-    lookAlike: [...alike.values()].filter((g) => g.length > 1),
-  };
+
+  // glue-ups: boards in contact, grouped into identical blanks
+  const boxes: Box[] = placements.map((pl) => ({ frame: pl.frame }));
+  const blanks = new Map<string, GlueUp>();
+  for (const g of findGlueUps(boxes)) {
+    let members = g.members.map((i) => placements[i]);
+    // read from either face: a blank and its mirror image list their boards the same way
+    const across = members.map((m) => m.part.label);
+    if ([...across].reverse().join() < across.join()) members = members.reverse();
+    const boards = members.map((m) => m.part.label);
+    const locs = members.map((m) => m.loc);
+    // named after the deepest component or group all the boards share
+    let prefix = locs[0].slice(0, -1);
+    for (const l of locs) {
+      let n = 0;
+      while (n < prefix.length && n < l.length - 1 && prefix[n] === l[n]) n++;
+      prefix = prefix.slice(0, n);
+    }
+    const parents = new Set(members.map((m) => m.row.parent));
+    const holder = prefix.length ? byLoc.get(locatorKey(prefix)) : undefined;
+    const group = parents.size === 1 && members[0].row.parent ? byLoc.get(locatorKey([...members[0].row.path, members[0].row.parent])) : undefined;
+    const name = group?.name || holder?.definition_name || "Glue-up";
+    const size = oriented(g.size);
+    const key = JSON.stringify([name, g.kind, boards, size]);
+    const b = blanks.get(key) ?? { label: "", name, kind: g.kind, count: 0, boards, size, placements: [] };
+    b.count++;
+    b.placements.push(locs);
+    blanks.set(key, b);
+  }
+  const glueUps = [...blanks.values()].sort((a, b) => a.name.localeCompare(b.name) || b.size[0] - a.size[0]);
+  glueUps.forEach((g, i) => {
+    g.label = `G${i + 1}`;
+    for (const l of new Set(g.boards)) list.find((p) => p.label === l)!.glueUps.push(g.label);
+  });
+
+  // boards of one glue-up are meant to be separate boards: never suggest linking them
+  const lookAlike = [...alike.values()]
+    .filter((g) => g.length > 1 && !glueUps.some((gu) => g.every((l) => gu.boards.includes(l))))
+    .map((g) => g.sort());
+
+  return { parts: list, glueUps, open: [...open.values()], lookAlike };
 }

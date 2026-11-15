@@ -1,4 +1,4 @@
-// Material types, as in OpenCutList. The type is our attribute on the material
+// Material types, after OpenCutList's. The type is our attribute on the material
 // (namespace `io.github.tinyworkshopdesign.tinycutlist`, key `type`), else an optional name → type map.
 
 import type { Host } from "../host/host.ts";
@@ -6,11 +6,13 @@ import type { Host } from "../host/host.ts";
 export const NS = "io.github.tinyworkshopdesign.tinycutlist";
 
 export type MaterialType =
-  | "solid_wood" | "sheet_good" | "dimensional" | "edge" | "hardware" | "veneer" | "machining" | "unknown";
+  | "solid_wood" | "sheet_good" | "dimensional" | "edge" | "veneer" | "unknown";
+
+const KNOWN = new Set<string>(["solid_wood", "sheet_good", "dimensional", "edge", "veneer"]);
 
 /** OpenCutList's order, used to break ties when a part's faces vote for its material. */
 export const TYPE_ORDER: MaterialType[] = [
-  "solid_wood", "sheet_good", "dimensional", "hardware", "edge", "veneer", "machining", "unknown",
+  "solid_wood", "sheet_good", "dimensional", "edge", "veneer", "unknown",
 ];
 
 /** Materials that dress a part (edges, veneers) and never make one. */
@@ -30,7 +32,7 @@ export async function readMaterials(host: Host, typesByName: Record<string, Mate
     try {
       const a = await host.query("hew.attr.get", { target: id, ns: NS });
       const v = a?.dictionaries?.[NS]?.type ?? a?.[NS]?.type ?? a?.type;
-      if (typeof v === "string") t = v as MaterialType;
+      if (typeof v === "string") t = KNOWN.has(v) ? (v as MaterialType) : "unknown";
     } catch {
       // no dictionary on this material
     }

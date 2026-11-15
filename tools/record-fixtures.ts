@@ -20,7 +20,7 @@ for (const scene of SCENES) {
   try {
     await scene.build(host);
     const rec = new RecordingHost(host);
-    const res = await countParts(rec, { pieces: true });
+    const res = await countParts(rec);
     const errors = scene.check(res);
     if (errors.length) {
       failed++;

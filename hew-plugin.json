@@ -27,25 +27,24 @@
       {
         "id": "count_parts",
         "class": "read_only",
-        "summary": "The model's parts: one row per definition, material, size and mirroring, with hardware, assemblies and open objects listed apart.",
+        "summary": "The model's parts: one row per closed solid, material, size and handedness, with glue-ups, open objects and look-alikes listed apart.",
         "params": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "loose": {
-              "type": "boolean",
-              "description": "list objects with no definition as parts placed once (default true)"
-            },
             "includeHidden": {
               "type": "boolean"
-            },
-            "pieces": {
-              "type": "boolean",
-              "description": "also list the solids of glued-up blanks"
             },
             "autoOrient": {
               "type": "boolean",
               "description": "longest extent first (default true)"
+            },
+            "types": {
+              "type": "object",
+              "description": "material name → type, for materials the model doesn't type",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           }
         },
@@ -59,22 +58,13 @@
                 "type": "object"
               }
             },
-            "hardware": {
+            "glueUps": {
               "type": "array",
               "items": {
                 "type": "object"
               }
             },
             "open": {
-              "type": "array",
-              "items": {
-                "type": "object"
-              }
-            },
-            "machining": {
-              "type": "integer"
-            },
-            "assemblies": {
               "type": "array",
               "items": {
                 "type": "object"
@@ -92,10 +82,8 @@
           },
           "required": [
             "parts",
-            "hardware",
+            "glueUps",
             "open",
-            "machining",
-            "assemblies",
             "lookAlike"
           ]
         }
