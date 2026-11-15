@@ -3,13 +3,34 @@
 // uses the SDK host from M3 on.
 
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { accessSync, constants } from "node:fs";
+import { delimiter, join } from "node:path";
 import { createInterface } from "node:readline";
 import { HostError, type Command, type Host } from "./host.ts";
 
+const runnable = (p: string) => {
+  try {
+    accessSync(p, constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/** hew-cli: `HEW_CLI`, else on the PATH, else inside Hew.app on macOS. */
 export function hewCliPath(): string {
-  const p = process.env.HEW_CLI;
-  if (!p) throw new Error("Set HEW_CLI to the path of hew-cli");
-  return p;
+  const env = process.env.HEW_CLI;
+  if (env) return env;
+  const exe = process.platform === "win32" ? "hew-cli.exe" : "hew-cli";
+  for (const dir of (process.env.PATH ?? "").split(delimiter)) {
+    if (dir && runnable(join(dir, exe))) return join(dir, exe);
+  }
+  const mac = "/Applications/Hew.app/Contents/MacOS/hew-cli";
+  if (process.platform === "darwin" && runnable(mac)) return mac;
+  throw new Error(
+    "hew-cli not found. Set HEW_CLI to its path: it ships inside Hew (Hew.app/Contents/MacOS/hew-cli on macOS, " +
+      "next to hew.exe on Windows, squashfs-root/usr/bin/hew-cli after `--appimage-extract` on Linux).",
+  );
 }
 
 export class HewCliHost implements Host {
@@ -37,8 +58,9 @@ export class HewCliHost implements Host {
     });
   }
 
-  static async start(cli = hewCliPath()): Promise<HewCliHost> {
-    const host = new HewCliHost(spawn(cli, ["mcp"], { stdio: "pipe" }));
+  /** `args` go to `hew-cli mcp`: `["--live"]` reads the document open in the app instead of a private one. */
+  static async start(cli = hewCliPath(), args: string[] = []): Promise<HewCliHost> {
+    const host = new HewCliHost(spawn(cli, ["mcp", ...args], { stdio: "pipe" }));
     await host.request("initialize", {
       protocolVersion: "2025-06-18",
       capabilities: {},
