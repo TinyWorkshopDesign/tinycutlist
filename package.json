@@ -13,7 +13,10 @@
     "test": "node --test \"test/unit/**/*.test.ts\"",
     "test:hew": "node --test \"test/hew/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
-    "record": "node tools/record-fixtures.ts"
+    "record": "node tools/record-fixtures.ts",
+    "test:solver": "node --test \"test/solver/**/*.test.ts\"",
+    "solver:build": "sh tools/solver-build.sh",
+    "solver:fetch": "node tools/solver-fetch.ts"
   },
   "devDependencies": {
     "@types/node": "24.3.0",
