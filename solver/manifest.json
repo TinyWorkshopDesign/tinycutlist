@@ -5,6 +5,7 @@
   "emscripten": "7.0.0",
   "files": {
     "packingsolver.js": "0e1ecbe00b02c9e83b9a565684cb76b2c36e9a0c396c2e873a067786d44771ac",
-    "packingsolver.wasm": "0149d6312c826a7fc381947500c81a1e26203463ce347ac4a1ef4ce0dff41e4d"
+    "packingsolver.wasm": "0149d6312c826a7fc381947500c81a1e26203463ce347ac4a1ef4ce0dff41e4d",
+    "LICENSES.txt": "34c8c36122079685387d9246052b2a4ab8ed2e980c85b31b6760b141e5131f10"
   }
 }
