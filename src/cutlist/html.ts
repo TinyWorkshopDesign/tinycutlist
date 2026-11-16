@@ -1,10 +1,12 @@
 // A printable page: the parts list, the glue-ups, and a cutting plan per
 // material, with its diagrams. One self-contained file: no scripts, no fonts.
+// The Ko-fi button at the bottom shows on screen only.
 
 import type { CutList } from "./count.ts";
 import { totals, type CutPlan } from "./nesting.ts";
 import { NO_MATERIAL } from "./stock.ts";
 import { barSvg, sheetSvg } from "./svg.ts";
+import { KOFI_CSS, kofiButtonHtml } from "../support.ts";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const mm = (v: number) => String(Math.round(v * 10) / 10);
@@ -34,8 +36,12 @@ td.num, th.num { text-align: right; }
 .tcl-offcut { stroke: var(--offcut); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .tcl-hatch { stroke: var(--offcut); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .tcl-label { fill: var(--ink); font-weight: 600; } .tcl-size { fill: var(--muted); } .tcl-grain { fill: var(--muted); font-style: italic; }
-@media print { body { background: #fff; padding: 0; } h2 { break-after: avoid; } }
+footer.tcl-support { margin-top: 40px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; color: var(--muted); }
+@media print { body { background: #fff; padding: 0; } h2 { break-after: avoid; } footer.tcl-support { display: none; } }
 `;
+
+/** Shown on screen, left out of the print. */
+const SUPPORT = `<footer class="tcl-support"><span>TinyCutList is free and open source.</span>${kofiButtonHtml()}</footer>`;
 
 export function formatHtml(title: string, res: CutList, plan: CutPlan): string {
   const out: string[] = [];
@@ -102,5 +108,5 @@ export function formatHtml(title: string, res: CutList, plan: CutPlan): string {
   }
   if (res.open.length) out.push(`<p class="muted">Not closed solids, not measured: ${res.open.map((o) => `${esc(o.name ?? o.id)} ×${o.count}`).join(", ")}.</p>`);
 
-  return `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${CSS}</style></head><body><main>\n${out.join("\n")}\n</main></body></html>\n`;
+  return `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${CSS}${KOFI_CSS}</style></head><body><main>\n${out.join("\n")}\n${SUPPORT}\n</main></body></html>\n`;
 }

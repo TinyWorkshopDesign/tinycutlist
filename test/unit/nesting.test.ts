@@ -109,9 +109,12 @@ test("drawings and the page: to scale, y up, labelled, escaped, self-contained",
   const html = formatHtml("Cabinet <1>", res, plan);
   assert.match(html, /^<!doctype html>/);
   assert.match(html, /<title>Cabinet &lt;1&gt;<\/title>/);
+  // the Ko-fi button: a plain link at the bottom, no outside script, left out of the print
+  assert.match(html, /<footer class="tcl-support">.*<a class="tcl-kofi" href="https:\/\/ko-fi\.com\/K8C82AR8S0"/);
+  assert.match(html, /@media print \{.*footer\.tcl-support \{ display: none; \} \}/);
   assert.match(html, /Stock sizes are guessed for <b>\(no material\)<\/b>/);
   assert.match(html, /Side &amp; top/);
-  assert.doesNotMatch(html, /<script|(src|href)="https?:/, "no scripts, nothing loaded from elsewhere");
+  assert.doesNotMatch(html, /<script|src="https?:|<link[^>]+href="https?:|url\(https?:/, "no scripts, nothing loaded from elsewhere (a plain link is fine)");
   assert.equal(new Set(html.match(/id="[^"]+"/g)).size, html.match(/id="[^"]+"/g)!.length, "ids are unique in the page");
   assert.match(formatPlanMarkdown(plan), /\| \(no material\) \| 18 mm \| 2800 × 2070 \| 1 sheet \| 1 \| stock guessed \|/);
 });

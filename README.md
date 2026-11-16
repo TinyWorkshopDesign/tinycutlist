@@ -1,5 +1,7 @@
 # TinyCutList
 
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K8C82AR8S0)
+
 Cut lists and cutting diagrams for [Hew](https://hew3d.com), as a plugin written in TypeScript on Hew's plugin API.
 
 **Status: early.** Hew runs plugins from its milestone 3 on. Until then TinyCutList runs as a command line tool on `hew-cli`, Hew's command-line bus: it prints a model's parts list (Markdown, CSV or JSON) and makes a printable page with the cutting plans for sheets and bars.
@@ -22,6 +24,7 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. Cutting plans: stock (`stock.ts`), standard sheet sizes (`presets.ts`), nesting with PackingSolver (`nesting.ts`), drawings (`svg.ts`) and the printable page (`html.ts`). |
 | `src/solver.ts`, `solver/` | PackingSolver as a single-threaded WebAssembly module: the CMake project that builds it, and the manifest of the released build. |
 | `src/cli.ts` | The `tinycutlist` command: a file or the open document, out as Markdown, CSV, JSON or a page with the cutting plans. |
+| `src/support.ts` | The Ko-fi link, for every surface that shows it: the printable page now, the plugin window from M3. Drawn as a plain link, without Ko-fi's script, so the page stays self-contained. |
 | `src/background.ts` | The plugin's entry: its bus commands as plain handlers over a `Host`, to be registered through the SDK in M3. |
 | `test/scenes.ts` | Synthetic models, each with the cut list the rule must give. |
 | `tests/acceptance/linked-copies/` | The acceptance test for Hew's linked copies (milestone 2), run against a real build. |

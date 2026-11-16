@@ -8,6 +8,7 @@ import { existsSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { HewCliHost, hewCliPath } from "./host/hew-cli.ts";
+import { KOFI } from "./support.ts";
 import { countParts, type CutList } from "./cutlist/count.ts";
 import { formatCsv } from "./cutlist/csv.ts";
 import { formatMarkdown, formatPlanMarkdown } from "./cutlist/format.ts";
@@ -48,6 +49,9 @@ FILES
 ENVIRONMENT
     HEW_CLI               Path to hew-cli, if it isn't on the PATH (or in Hew.app on macOS)
     TINYCUTLIST_SOLVER    Folder holding packingsolver.js and .wasm (default: solver/dist)
+
+TinyCutList is free and open source. If it saves you time, you can support it:
+    ${KOFI.url}
 `;
 
 type Format = "md" | "csv" | "json" | "html";
