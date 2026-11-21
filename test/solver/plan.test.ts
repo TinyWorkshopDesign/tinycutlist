@@ -75,3 +75,25 @@ test("the last sheet leaves one clean offcut, not scattered parts (several sheet
   assert.ok(o.x >= reach, "every part is on one side of it");
   assert.ok(o.length >= 800, `a usable offcut, not a strip: ${o.length} × ${o.width}`);
 });
+
+test("grain from the material: those parts never turn, on stock without grain; the others may", { skip }, async () => {
+  // hew#134: a layered material's parts come with `grain` and their length along it first,
+  // here a 300 × 500 rail and a 450 × 900 panel; the stock file says the sheet has no grain
+  const withGrain = (p: Part): Part => ({ ...p, grain: true });
+  const parts = [withGrain(part("A", [300, 500, 18], 8, "Birch ply")), part("B", [700, 400, 18], 6, "Birch ply"), withGrain(part("C", [450, 900, 18], 4, "Birch ply"))];
+  const trim = 10;
+  const plan = await planCuts(list(parts), { "Birch ply": { kind: "sheet", sheets: [[2440, 1220]], kerf: 3.2, trim, grain: false } }, await loadSolver());
+  const g = plan.groups[0];
+  assert.equal(g.error, undefined);
+  assert.deepEqual(g.tooBig, []);
+  assert.equal(g.grain, true, "the diagram shows the grain");
+  const placed = new Map<string, number>();
+  for (const s of g.sheets)
+    for (const p of s.parts) {
+      if (p.label !== "B") assert.equal(p.rotated, false, `${p.label} keeps its length along the sheet`);
+      const w = p.rotated ? p.width : p.length, h = p.rotated ? p.length : p.width;
+      assert.ok(p.x >= trim - 1e-6 && p.y >= trim - 1e-6 && p.x + w <= s.length - trim + 1e-6 && p.y + h <= s.width - trim + 1e-6, `${p.label} inside the trims`);
+      placed.set(p.label, (placed.get(p.label) ?? 0) + s.count);
+    }
+  assert.deepEqual(Object.fromEntries(placed), { A: 8, B: 6, C: 4 });
+});
