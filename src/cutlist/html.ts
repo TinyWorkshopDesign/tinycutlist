@@ -88,7 +88,7 @@ export function formatHtml(title: string, res: CutList, plan: CutPlan): string {
     out.push(
       `<h3>${esc(g.material ?? NO_MATERIAL)}, ${what}</h3>`,
       `<p class="muted">${plural(t.stock, g.kind, `${g.kind}s`)} (stock ${stockSizes}), ${plural(t.parts, "part", "parts")}. ` +
-        `Kerf ${mm(g.stock.kerf)}, trim ${mm(g.stock.trim)}${g.kind === "sheet" && g.stock.grain ? ", parts follow the grain" : ""}.` +
+        `Kerf ${mm(g.stock.kerf)}, trim ${mm(g.stock.trim)}${g.grain ? ", parts follow the grain" : ""}.` +
         `${g.stock.guessed ? ` <span class="warn">Stock guessed.</span>` : ""}</p>`,
     );
     if (g.error) out.push(`<p class="warn">Couldn't plan this group: ${esc(g.error)}</p>`);
@@ -99,7 +99,7 @@ export function formatHtml(title: string, res: CutList, plan: CutPlan): string {
       for (const p of l.parts) counts.set(p.label, (counts.get(p.label) ?? 0) + 1);
       const legend = [...counts].map(([lab, k]) => `<b>${esc(lab)}</b> ${esc(names.get(lab) ?? "")}${k > 1 ? ` ×${k}` : ""}`).join(" · ");
       const head = `${g.kind === "sheet" ? "Sheet" : "Bar"} ${i + 1}${l.count > 1 ? ` <b>×${l.count}</b>` : ""}: ${g.kind === "sheet" ? dims([(l as any).length, (l as any).width]) : mm(l.length)}, ${l.efficiency}% used`;
-      const svg = g.kind === "sheet" ? sheetSvg(g.sheets[i], { trim: g.stock.trim, grain: g.stock.grain }) : barSvg(g.bars[i], { trim: g.stock.trim, section: g.section });
+      const svg = g.kind === "sheet" ? sheetSvg(g.sheets[i], { trim: g.stock.trim, grain: g.grain }) : barSvg(g.bars[i], { trim: g.stock.trim, section: g.section });
       out.push(`<div class="layout"><div>${head}</div>${svg}<div class="legend">${legend}</div></div>`);
     });
   }
