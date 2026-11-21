@@ -1,6 +1,6 @@
 // A cut list as a Markdown table, for tools and tests. The plugin's own UI comes with M3.
 
-import type { CutList } from "./count.ts";
+import { thicknessNote, type CutList } from "./count.ts";
 import { totals, type CutPlan } from "./nesting.ts";
 import { NO_MATERIAL } from "./stock.ts";
 
@@ -10,6 +10,7 @@ export function formatMarkdown(title: string, res: CutList): string {
   const out = [`# ${title}`, "", "| | Part | Qty | L | W | T | Material | Notes |", "|---|---|---:|---:|---:|---:|---|---|"];
   for (const p of res.parts) {
     const notes = [
+      thicknessNote(p) ? `⚠ ${thicknessNote(p)}` : "",
       p.mirrored ? "mirrored" : "",
       p.otherNames.length ? `also named ${p.otherNames.join(", ")}` : "",
       p.glueUps.length ? `glued up in ${p.glueUps.join(", ")}` : "",

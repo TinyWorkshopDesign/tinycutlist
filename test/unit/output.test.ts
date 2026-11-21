@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { ReplayHost, type Recording } from "../../src/host/replay.ts";
 import { countParts } from "../../src/cutlist/count.ts";
 import { formatCsv } from "../../src/cutlist/csv.ts";
+import { formatHtml } from "../../src/cutlist/html.ts";
 
 const replay = async (id: string) => {
   const rec: Recording = JSON.parse(readFileSync(new URL(`../fixtures/${id}.json`, import.meta.url), "utf8"));
@@ -18,10 +19,20 @@ const lines = (csv: string) => csv.trimEnd().split("\r\n");
 test("CSV: a header and one row per part, glue-ups named", async () => {
   const res = await replay("S2");
   const rows = lines(formatCsv(res));
-  assert.equal(rows[0], "Label,Part,Quantity,Length (mm),Width (mm),Thickness (mm),Material,Mirrored,Glue-ups,Other names");
+  assert.equal(rows[0], "Label,Part,Quantity,Length (mm),Width (mm),Thickness (mm),Material,Mirrored,Glue-ups,Other names,Warnings");
   assert.equal(rows.length, 1 + res.parts.length);
   const a = rows.find((r) => r.includes("Lamination A"))!;
-  assert.match(a, /,4,700,50,25,Oak,,G1 Leg \([A-Z] \+ [A-Z]\),$/);
+  assert.match(a, /,4,700,50,25,Oak,,G1 Leg \([A-Z] \+ [A-Z]\),,$/);
+});
+
+test("CSV and HTML: a thickness mismatch is a warning on its part", async () => {
+  const res = await replay("S2");
+  res.parts[0].thicknessMismatch = { part: 19, material: 18 };
+  const row = lines(formatCsv(res))[1];
+  assert.ok(row.endsWith(`,"19 mm thick, but ${res.parts[0].material} is 18 mm"`), row); // quoted: it holds a comma
+  const html = formatHtml("S2", res, { groups: [], listOnly: [] });
+  assert.match(html, /<p class="warn">The thickness doesn't match the material for <b>A<\/b>/);
+  assert.match(html, /<span class="warn">19 mm thick, but/);
 });
 
 test("CSV for Italian spreadsheets: semicolons and decimal commas", async () => {

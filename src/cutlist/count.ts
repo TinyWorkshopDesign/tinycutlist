@@ -45,6 +45,11 @@ export type Part = {
    * and the nesting keeps it along the sheet's grain.
    */
   grain?: boolean;
+  /**
+   * Hew reports the part's thickness and its material's differ (hew#134), in
+   * millimeters: a "19 mm" part drawn at 18, say. A warning, nothing is refused.
+   */
+  thicknessMismatch?: { part: number; material: number };
   /** A left or right hand of a part that isn't its own mirror image. */
   mirrored: boolean;
   count: number;
@@ -91,6 +96,19 @@ export function letters(n: number): string {
 }
 
 type Placement = { row: Occurrence; loc: string[]; part: Part; frame: Frame };
+
+/** Hew's thickness mismatch on a row, in mm, under the names it may get (hew#134 hasn't settled them). */
+function thicknessMismatch(o: Occurrence): { part: number; material: number } | undefined {
+  const m: any = o.thickness_mismatch ?? (o as any).material_thickness_mismatch;
+  if (!m) return undefined;
+  const part = m.part ?? m.part_thickness, material = m.material ?? m.material_thickness;
+  if (typeof part !== "number" || typeof material !== "number") return undefined;
+  return { part: r1(part * 1000), material: r1(material * 1000) };
+}
+
+/** The warning a part list shows for a thickness mismatch. */
+export const thicknessNote = (p: Pick<Part, "thicknessMismatch" | "material">): string =>
+  p.thicknessMismatch ? `${p.thicknessMismatch.part} mm thick, but ${p.material ?? "its material"} is ${p.thicknessMismatch.material} mm` : "";
 
 export async function countParts(host: Host, opts: CountOptions = {}): Promise<CutList> {
   const { includeHidden = false, autoOrient = true } = opts;
@@ -157,6 +175,8 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
     }
     p.count++;
     p.placements.push(loc);
+    const mismatch = thicknessMismatch(o);
+    if (mismatch && !p.thicknessMismatch) p.thicknessMismatch = mismatch;
     // a linked copy can be renamed on its own: the name sits on its placement
     const own = holder?.name;
     if (own && own !== p.name && !p.otherNames.includes(own)) p.otherNames.push(own);

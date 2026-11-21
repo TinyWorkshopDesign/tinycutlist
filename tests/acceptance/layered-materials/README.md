@@ -106,7 +106,9 @@ Lengths are metres, as everywhere on the bus; the design's `Layer.thickness` is 
 
 Done: when `part_frame.source` is `"material"`, `count.ts` keeps Hew's order (length along the grain, width, thickness) and marks the part `grain`. `nesting.ts` doesn't re-sort it and keeps that part oriented along the sheet, even when the stock file says the sheet has no grain. Both are covered by unit tests on a re-answered S1 fixture.
 
-Still to do, once the names are settled: the thickness from the material in place of the side file's, and the mismatch in the parts list as a warning.
+Done too: Hew's thickness mismatch on a part's row (read as `thickness_mismatch` or `material_thickness_mismatch`) becomes a warning on that part in the Markdown, CSV ("Warnings" column) and HTML lists, with a line at the top of the page. The part is still listed and planned at the thickness it's drawn.
+
+Still to do, once the names are settled: the thickness from the material in place of the side file's.
 
 ## Files
 
