@@ -37,3 +37,30 @@ test("grain from the material: Hew's order is kept, not sorted longest first", a
   assert.deepEqual(p.size, [400, 600, 18], "length along the grain first, though shorter than the width");
   assert.equal(p.grain, true);
 });
+
+/** S1 with Hew's thickness mismatch on the panel's row, under `field` (hew#134 hasn't settled the name). */
+function mismatched(field: string, value: object): Recording {
+  const recording: Recording = JSON.parse(readFileSync(new URL("../fixtures/S1.json", import.meta.url), "utf8"));
+  for (const x of recording.exchanges) {
+    if (x.method !== "hew.query.occurrences") continue;
+    for (const row of (x.result as any).occurrences) if (row.id === "obj_3") row[field] = value;
+  }
+  return recording;
+}
+
+test("thickness mismatch: an 18 mm part on 19 mm material is listed with a warning", async () => {
+  const res = await countParts(new ReplayHost(mismatched("thickness_mismatch", { part: 0.018, material: 0.019 })));
+  const p = res.parts.find((q) => q.object === "obj_3")!;
+  assert.deepEqual(p.thicknessMismatch, { part: 18, material: 19 });
+  assert.equal(p.count, 1, "still counted as a part: a warning, nothing refused");
+  assert.match(formatMarkdown("S1", res), /⚠ 18 mm thick, but .+ is 19 mm/);
+  const others = res.parts.filter((q) => q.object !== "obj_3");
+  assert.ok(others.every((q) => q.thicknessMismatch === undefined), "only the panel is flagged");
+});
+
+test("thickness mismatch: the other field names Hew may pick are read too; null is no mismatch", async () => {
+  const alt = await countParts(new ReplayHost(mismatched("material_thickness_mismatch", { part_thickness: 0.019, material_thickness: 0.018 })));
+  assert.deepEqual(alt.parts.find((q) => q.object === "obj_3")!.thicknessMismatch, { part: 19, material: 18 });
+  const none = await countParts(new ReplayHost(mismatched("thickness_mismatch", null as any)));
+  assert.equal(none.parts.find((q) => q.object === "obj_3")!.thicknessMismatch, undefined);
+});

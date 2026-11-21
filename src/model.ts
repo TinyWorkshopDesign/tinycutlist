@@ -29,6 +29,12 @@ export type Occurrence = {
   solid?: boolean;
   /** Object rows: the seam family of a shape the importer split, if any. */
   family?: string | null;
+  /**
+   * Object rows with a layered material (hew#134): the part's thickness and its
+   * material's, in metres, when they differ. The name isn't settled yet; see
+   * `thicknessMismatch` in src/cutlist/count.ts.
+   */
+  thickness_mismatch?: { part: number; material: number } | null;
 };
 
 /** A node's locator: its path plus its id. Unique across the occurrence tree. */

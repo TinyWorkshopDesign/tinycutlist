@@ -2,7 +2,7 @@
 // material, with its diagrams. One self-contained file: no scripts, no fonts.
 // The Ko-fi button at the bottom shows on screen only.
 
-import type { CutList } from "./count.ts";
+import { thicknessNote, type CutList } from "./count.ts";
 import { totals, type CutPlan } from "./nesting.ts";
 import { NO_MATERIAL } from "./stock.ts";
 import { barSvg, sheetSvg } from "./svg.ts";
@@ -56,6 +56,14 @@ export function formatHtml(title: string, res: CutList, plan: CutPlan): string {
     );
   }
 
+  const mismatched = res.parts.filter((p) => p.thicknessMismatch);
+  if (mismatched.length) {
+    out.push(
+      `<p class="warn">The thickness doesn't match the material for ${mismatched.map((p) => `<b>${esc(p.label)}</b>`).join(", ")}. ` +
+        `Check these parts in the model before cutting: they're planned at the thickness they're drawn.</p>`,
+    );
+  }
+
   // the parts list
   out.push(`<h2>Parts</h2><div class="table-wrap"><table><thead><tr><th></th><th>Part</th><th class="num">Qty</th><th class="num">L</th><th class="num">W</th><th class="num">T</th><th>Material</th><th>Notes</th></tr></thead><tbody>`);
   for (const p of res.parts) {
@@ -63,7 +71,7 @@ export function formatHtml(title: string, res: CutList, plan: CutPlan): string {
     out.push(
       `<tr><td><b>${esc(p.label)}</b></td><td>${esc(p.name)}</td><td class="num">${p.count}</td>` +
         p.size.map((v) => `<td class="num">${mm(v)}</td>`).join("") +
-        `<td>${esc(p.material ?? "—")}</td><td>${esc(notes)}</td></tr>`,
+        `<td>${esc(p.material ?? "—")}</td><td>${thicknessNote(p) ? `<span class="warn">${esc(thicknessNote(p))}</span>${notes ? "; " : ""}` : ""}${esc(notes)}</td></tr>`,
     );
   }
   out.push(`</tbody></table></div>`);

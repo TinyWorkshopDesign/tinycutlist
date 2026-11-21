@@ -1,7 +1,7 @@
 // A cut list as CSV, one row per part, for spreadsheets and other tools.
 // Glue-ups are named in a column; their blanks are in the Markdown and JSON output.
 
-import type { CutList } from "./count.ts";
+import { thicknessNote, type CutList } from "./count.ts";
 
 export type CsvOptions = {
   /** Field separator. Default ",". Use ";" where the decimal mark is a comma. */
@@ -10,7 +10,7 @@ export type CsvOptions = {
   decimal?: string;
 };
 
-const HEADER = ["Label", "Part", "Quantity", "Length (mm)", "Width (mm)", "Thickness (mm)", "Material", "Mirrored", "Glue-ups", "Other names"];
+const HEADER = ["Label", "Part", "Quantity", "Length (mm)", "Width (mm)", "Thickness (mm)", "Material", "Mirrored", "Glue-ups", "Other names", "Warnings"];
 
 export function formatCsv(res: CutList, opts: CsvOptions = {}): string {
   const { sep = ",", decimal = "." } = opts;
@@ -25,7 +25,7 @@ export function formatCsv(res: CutList, opts: CsvOptions = {}): string {
       const g = res.glueUps.find((x) => x.label === label)!;
       return `${label} ${g.name} (${g.boards.join(" + ")})`;
     });
-    rows.push([p.label, p.name, p.count, ...p.size, p.material ?? "", p.mirrored ? "yes" : "", glue.join("; "), p.otherNames.join("; ")] as any);
+    rows.push([p.label, p.name, p.count, ...p.size, p.material ?? "", p.mirrored ? "yes" : "", glue.join("; "), p.otherNames.join("; "), thicknessNote(p)] as any);
   }
   return rows.map((r) => r.map(field).join(sep)).join("\r\n") + "\r\n";
 }
