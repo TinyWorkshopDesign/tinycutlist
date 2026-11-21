@@ -34,8 +34,17 @@ export type Part = {
   object: string;
   material: string | null;
   materialType: MaterialType;
-  /** Millimeters, rounded to 0.1. */
+  /**
+   * Millimeters, rounded to 0.1. Longest first, unless the part has `grain`:
+   * then length along the grain, width, thickness, as Hew gives them.
+   */
   size: [number, number, number];
+  /**
+   * The grain comes from the part's material in Hew (a layered material with a
+   * grain direction): `size[0]` runs along it, even when it isn't the longest,
+   * and the nesting keeps it along the sheet's grain.
+   */
+  grain?: boolean;
   /** A left or right hand of a part that isn't its own mirror image. */
   mirrored: boolean;
   count: number;
@@ -104,9 +113,10 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
     return best ? best[0] : o.material_effective;
   }
 
-  const oriented = (extentsM: number[]): [number, number, number] => {
+  /** Millimeters; longest first with autoOrient, unless `keepOrder` (Hew gave the grain's order). */
+  const oriented = (extentsM: number[], keepOrder = false): [number, number, number] => {
     let size = extentsM.map((v) => v * 1000);
-    if (autoOrient) size = [...size].sort((a, b) => b - a);
+    if (autoOrient && !keepOrder) size = [...size].sort((a, b) => b - a);
     return size.map(r1) as [number, number, number];
   };
 
@@ -130,15 +140,17 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
     const sig = await host.query("hew.query.signature", { path: loc });
     // part_frame honours a frame the user set on the solid (grain direction); the signature's doesn't
     const pf = await host.query("hew.query.part_frame", { path: loc });
-    const size = oriented(pf.extents);
+    // a layered material with a grain (hew#134): extents come length along the grain first
+    const grain = pf.source === "material";
+    const size = oriented(pf.extents, grain);
     const material = await partMaterial(o, loc);
     const mirrored = o.mirrored && !sig.symmetric;
-    const k = JSON.stringify([o.id, material, size, mirrored]);
+    const k = JSON.stringify([o.id, material, size, mirrored, grain]);
     let p = parts.get(k);
     if (!p) {
       p = {
         label: "", name, object: o.id, material: materials.name(material), materialType: materials.type(material),
-        size, mirrored, count: 0, placements: [], otherNames: [], glueUps: [],
+        size, ...(grain ? { grain } : {}), mirrored, count: 0, placements: [], otherNames: [], glueUps: [],
       };
       parts.set(k, p);
       shapes.set(k, `${sig.shape}/${material}`);

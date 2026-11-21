@@ -37,6 +37,8 @@ export type CutGroup = {
   /** Bars: the parts' section, width × thickness in mm. */
   section?: [number, number];
   stock: Resolved;
+  /** Sheets: some parts keep their length along the sheet's grain (the stock's, or their material's in Hew). */
+  grain: boolean;
   sheets: SheetLayout[];
   bars: BarLayout[];
   /** Parts bigger than any stock size. */
@@ -55,14 +57,16 @@ const S = 10;
 const PARAMS = JSON.stringify({ optimization_mode: "not-anytime-sequential" });
 const r1 = (v: number) => Math.round(v * 10) / 10;
 
-type Item = { label: string; name: string; length: number; width: number; count: number };
+/** `oriented`: the part's length stays along the sheet's length (its grain). */
+type Item = { label: string; name: string; length: number; width: number; count: number; oriented: boolean };
 
 export async function planCuts(res: CutList, stock: Stock, solve: Solver): Promise<CutPlan> {
   const groups = new Map<string, { material: string | null; stock: Resolved; thickness?: number; section?: [number, number]; items: Item[] }>();
   const listOnly: CutPlan["listOnly"] = [];
   for (const p of res.parts) {
     const st = resolve(stock, p.material, p.materialType);
-    const [length, width, thickness] = [...p.size].sort((a, b) => b - a);
+    // a part with grain from Hew keeps its order: length along the grain, even when shorter than the width
+    const [length, width, thickness] = p.grain ? p.size : [...p.size].sort((a, b) => b - a);
     if (st.kind === "list") {
       listOnly.push({ label: p.label, count: p.count, material: p.material });
       continue;
@@ -73,14 +77,16 @@ export async function planCuts(res: CutList, stock: Stock, solve: Solver): Promi
       ...(st.kind === "sheet" ? { thickness } : { section: [width, thickness] as [number, number] }),
       items: [],
     };
-    g.items.push({ label: p.label, name: p.name, length, width, count: p.count });
+    g.items.push({ label: p.label, name: p.name, length, width, count: p.count, oriented: st.grain || !!p.grain });
     groups.set(key, g);
   }
 
   const out: CutGroup[] = [];
   for (const g of groups.values()) {
     const t0 = Date.now();
-    const group: CutGroup = { material: g.material, kind: g.stock.kind as "sheet" | "bar", stock: g.stock, sheets: [], bars: [], tooBig: [], seconds: 0 };
+    const kind = g.stock.kind as "sheet" | "bar";
+    const grain = kind === "sheet" && g.items.some((it) => it.oriented);
+    const group: CutGroup = { material: g.material, kind, stock: g.stock, grain, sheets: [], bars: [], tooBig: [], seconds: 0 };
     if (g.thickness !== undefined) group.thickness = g.thickness;
     if (g.section) group.section = g.section;
     try {
@@ -108,7 +114,7 @@ async function nestSheets(items: Item[], st: Resolved, solve: Solver, group: Cut
   const t = st.trim;
   const sizes = st.sheets.filter(([l, w]) => l > 2 * t && w > 2 * t);
   const fits = (it: Item) =>
-    sizes.some(([l, w]) => (it.length <= l - 2 * t && it.width <= w - 2 * t) || (!st.grain && it.width <= l - 2 * t && it.length <= w - 2 * t));
+    sizes.some(([l, w]) => (it.length <= l - 2 * t && it.width <= w - 2 * t) || (!it.oriented && it.width <= l - 2 * t && it.length <= w - 2 * t));
   const fitting = items.filter(fits);
   group.tooBig = items.filter((it) => !fits(it)).map((it) => ({ label: it.label, count: it.count }));
   if (!fitting.length) return;
@@ -127,7 +133,7 @@ async function nestSheets(items: Item[], st: Resolved, solve: Solver, group: Cut
       left_trim_type: "hard", right_trim_type: "hard", bottom_trim_type: "hard", top_trim_type: "hard",
     })),
     // x runs along the sheet's length: with grain, a part's length stays along it
-    item_types: fitting.map((it) => ({ width: Math.round(it.length * S), height: Math.round(it.width * S), copies: it.count, oriented: st.grain })),
+    item_types: fitting.map((it) => ({ width: Math.round(it.length * S), height: Math.round(it.width * S), copies: it.count, oriented: it.oriented })),
   });
   const plates = new Map<string, SheetLayout>();
   for (const [plate, copies, , x, y, w, h, type, , parent] of csvRows(certificate)) {

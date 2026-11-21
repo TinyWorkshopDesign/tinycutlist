@@ -73,6 +73,22 @@ test("grain: oriented parts can't turn, so a part that only fits turned is too b
   assert.deepEqual(solve.calls[0].instance.item_types.map((i: any) => i.oriented), [true, true]);
 });
 
+test("grain from the material: the part keeps its length along the sheet, though the stock has no grain", async () => {
+  const solve = fake({ rectangleguillotine: "PLATE_ID,COPIES,NODE_ID,X,Y,WIDTH,HEIGHT,TYPE,CUT,PARENT\n0,1,0,0,0,10000,5000,0,0,\n" });
+  // a 300 × 500 rail whose grain runs along the 300, and a plain part
+  const rail: Part = { ...part("A", "Rail", [300, 500, 18], 2, "Birch ply"), grain: true };
+  const res = list([rail, part("B", "Shelf", [400, 200, 18], 1, "Birch ply")]);
+  const plan = await planCuts(res, { "Birch ply": { kind: "sheet", sheets: [[1000, 600]], grain: false, trim: 10 } }, solve);
+  assert.equal(solve.calls.length, 1, "same material and thickness: one instance");
+  assert.deepEqual(solve.calls[0].instance.item_types.map((i: any) => [i.width, i.height, i.oriented]), [[3000, 5000, true], [4000, 2000, false]]);
+  assert.equal(plan.groups[0].thickness, 18);
+  assert.equal(plan.groups[0].grain, true, "the diagram shows the grain");
+  assert.deepEqual(plan.groups[0].tooBig, []);
+  // on a 1000 × 500 sheet (trim 10) the rail would only fit turned, and it can't turn
+  const narrow = await planCuts(res, { "Birch ply": { kind: "sheet", sheets: [[1000, 500]], grain: false, trim: 10 } }, solve);
+  assert.deepEqual(narrow.groups[0].tooBig, [{ label: "A", count: 2 }]);
+});
+
 test("bars: the kerf goes on every piece and once on the bar, trims at both ends", async () => {
   const solve = fake({ onedimensional: "TYPE,ID,COPIES,BIN,X,LX\nBIN,0,3,0,0,29830\nITEM,0,3,0,0,8670\nITEM,1,3,0,8670,5000\n" });
   const res = list([part("A", "Rail", [864, 40, 40], 3, "Pine batten"), part("B", "Short", [497, 40, 40], 3, "Pine batten")]);
