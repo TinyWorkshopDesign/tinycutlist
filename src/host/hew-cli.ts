@@ -6,7 +6,7 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { accessSync, constants } from "node:fs";
 import { delimiter, join } from "node:path";
 import { createInterface } from "node:readline";
-import { HostError, type Command, type Host } from "./host.ts";
+import { HostError, readInTransactions, type Command, type Host, type Query, type ReadAnswer, type TransactOptions } from "./host.ts";
 
 const runnable = (p: string) => {
   try {
@@ -74,9 +74,14 @@ export class HewCliHost implements Host {
     return this.tool("hew_query", { method, params });
   }
 
-  async transact(commands: Command[], options: { label?: string; dry_run?: boolean } = {}): Promise<any[]> {
+  async transact(commands: Command[], options: TransactOptions = {}): Promise<any[]> {
     const res = await this.tool("hew_transact", { commands, ...options });
     return res.results ?? [];
+  }
+
+  /** Reads in dry-run transactions: one round trip for many reads. */
+  read(queries: Query[], generation?: number): Promise<ReadAnswer[]> {
+    return readInTransactions(this, queries, generation);
   }
 
   /** Opens a model file in the private document (read-only for the file on disk). */
@@ -114,7 +119,7 @@ export class HewCliHost implements Host {
     }
     if (content.error) {
       const data = content.error.data ?? {};
-      throw new HostError(data.explanation ?? content.error.message ?? "refused", data.refusal ?? null);
+      throw new HostError(data.explanation ?? content.error.message ?? "refused", data.refusal ?? null, typeof data.failed_index === "number" ? data.failed_index : null);
     }
     return content.result ?? {};
   }

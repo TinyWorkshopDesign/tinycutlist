@@ -22,7 +22,7 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | Path | What |
 |---|---|
 | `hew-plugin.json` | The plugin manifest (Hew's format, `docs/agents/PLUGINS.md` in Hew). `npm run plugin:build` copies it into the package. |
-| `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. `SdkHost` (`sdk.ts`) is the one inside Hew, over the plugin SDK's `hew.api`, keeping under Hew's 1,000 messages a second. |
+| `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`, `read`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. `SdkHost` (`sdk.ts`) is the one inside Hew, over the plugin SDK's `hew.api`, keeping under Hew's 1,000 messages a second. `Host.read` sends many reads as dry-run `hew.doc.transact`s, 100 at a time, all of one model generation; a refused read keeps its refusal in its own slot. |
 | `src/model.ts` | What `hew.query.occurrences` reports, as the plugin reads it. |
 | `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. Cutting plans: stock (`stock.ts`), standard sheet sizes (`presets.ts`), nesting with PackingSolver (`nesting.ts`), drawings (`svg.ts`) and the printable page (`html.ts`). |
 | `src/solver.ts`, `solver/` | PackingSolver as a single-threaded WebAssembly module: the CMake project that builds it, and the manifest of the released build. |
@@ -135,7 +135,7 @@ printf '%s\n' \
 hew-cli run cutlist.jsonl --live
 ```
 
-Two things the package does that the command line doesn't need. Hew's plugin Worker allows no `eval`, and embind (PackingSolver's bindings) builds its call wrappers with the Function constructor, so the build puts `src/plugin/embind-invoker.js` in place of that one function. And Hew stops a plugin that sends more than 1,000 messages a second, which a large model's reads would, so `SdkHost` keeps to 800.
+Two things the package does that the command line doesn't need. Hew's plugin Worker allows no `eval`, and embind (PackingSolver's bindings) builds its call wrappers with the Function constructor, so the build puts `src/plugin/embind-invoker.js` in place of that one function. And Hew stops a plugin that sends more than 1,000 messages a second: the reads go in batches (below), and `SdkHost` keeps to 800 a second besides.
 
 ## Running
 

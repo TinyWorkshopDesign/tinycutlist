@@ -23,21 +23,20 @@ export type Materials = {
   type(id: string | null): MaterialType;
 };
 
-export async function readMaterials(host: Host, typesByName: Record<string, MaterialType> = {}): Promise<Materials> {
+export async function readMaterials(host: Host, typesByName: Record<string, MaterialType> = {}, generation?: number): Promise<Materials> {
   const scene = await host.query("hew.query.scene", {});
   const names = new Map<string, string>((scene.materials ?? []).map((m: any) => [m.id, m.name]));
+  const ids = [...names.keys()];
+  // every material's dictionary in one read; a material with none is refused in its own slot
+  const answers = await host.read(ids.map((id) => ({ method: "hew.attr.get", params: { target: id, ns: NS } })), generation);
   const types = new Map<string, MaterialType>();
-  for (const [id, name] of names) {
-    let t: MaterialType | undefined = typesByName[name];
-    try {
-      const a = await host.query("hew.attr.get", { target: id, ns: NS });
-      const v = a?.dictionaries?.[NS]?.type ?? a?.[NS]?.type ?? a?.type;
-      if (typeof v === "string") t = KNOWN.has(v) ? (v as MaterialType) : "unknown";
-    } catch {
-      // no dictionary on this material
-    }
+  ids.forEach((id, i) => {
+    let t: MaterialType | undefined = typesByName[names.get(id)!];
+    const a = answers[i].ok ? answers[i].result : null;
+    const v = a?.dictionaries?.[NS]?.type ?? a?.[NS]?.type ?? a?.type;
+    if (typeof v === "string") t = KNOWN.has(v) ? (v as MaterialType) : "unknown";
     types.set(id, t ?? "unknown");
-  }
+  });
   return {
     name: (id) => (id ? names.get(id) ?? id : null),
     type: (id) => (id ? types.get(id) ?? "unknown" : "unknown"),
