@@ -16,10 +16,12 @@
     "record": "node tools/record-fixtures.ts",
     "test:solver": "node --test \"test/solver/**/*.test.ts\"",
     "solver:build": "sh tools/solver-build.sh",
-    "solver:fetch": "node tools/solver-fetch.ts"
+    "solver:fetch": "node tools/solver-fetch.ts",
+    "plugin:build": "node tools/plugin-build.ts"
   },
   "devDependencies": {
     "@types/node": "24.3.0",
+    "esbuild": "^0.28.2",
     "typescript": "5.9.3"
   },
   "bin": {

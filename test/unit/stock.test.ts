@@ -6,7 +6,8 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PRESETS, presetFor } from "../../src/cutlist/presets.ts";
-import { NO_MATERIAL, addMissing, guessEntry, loadStock, resolve } from "../../src/cutlist/stock.ts";
+import { NO_MATERIAL, guessEntry, resolve } from "../../src/cutlist/stock.ts";
+import { addMissing, loadStock } from "../../src/stock-file.ts";
 
 test("presets: material names in Italian and English find the right preset", () => {
   const cases: [string, string | null][] = [
