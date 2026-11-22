@@ -10,11 +10,9 @@ import { parseArgs } from "node:util";
 import { HewCliHost, hewCliPath } from "./host/hew-cli.ts";
 import { KOFI } from "./support.ts";
 import { countParts, type CutList } from "./cutlist/count.ts";
-import { formatCsv } from "./cutlist/csv.ts";
-import { formatMarkdown, formatPlanMarkdown } from "./cutlist/format.ts";
-import { formatHtml } from "./cutlist/html.ts";
+import { render, type Format } from "./cutlist/render.ts";
 import { planCuts, totals, type CutPlan } from "./cutlist/nesting.ts";
-import { addMissing, globalStockPath, loadStock } from "./cutlist/stock.ts";
+import { addMissing, globalStockPath, loadStock } from "./stock-file.ts";
 import { loadSolver } from "./solver.ts";
 
 const USAGE = `tinycutlist — the cut list and cutting plans of a Hew model
@@ -54,18 +52,9 @@ TinyCutList is free and open source. If it saves you time, you can support it:
     ${KOFI.url}
 `;
 
-type Format = "md" | "csv" | "json" | "html";
-
 function fail(message: string, code = 1): never {
   process.stderr.write(`tinycutlist: ${message}\n`);
   process.exit(code);
-}
-
-export function render(format: Format, title: string, res: CutList, plan: CutPlan | null, sep?: string, decimal?: string): string {
-  if (format === "csv") return formatCsv(res, { sep, decimal });
-  if (format === "json") return JSON.stringify(plan ? { ...res, plan } : res, null, 2) + "\n";
-  if (format === "html") return formatHtml(title, res, plan!);
-  return formatMarkdown(title, res) + (plan ? "\n\n" + formatPlanMarkdown(plan) : "") + "\n";
 }
 
 /** The live document's title, as `hew-cli documents --live` lists it (front window unless `ref` names one). */

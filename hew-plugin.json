@@ -10,17 +10,13 @@
   },
   "license": "GPL-3.0",
   "source": "https://github.com/TinyWorkshopDesign/tinycutlist",
-  "hew": ">=1.5.0",
   "api": 1,
-  "main": "dist/background.js",
+  "main": "background.js",
   "permissions": [
-    "model.read",
-    "attributes.write"
+    "model.read"
   ],
   "activation": [
-    "on_command",
-    "on_surface_open",
-    "on_document_has_namespace"
+    "on_command"
   ],
   "contributes": {
     "commands": [
@@ -86,6 +82,171 @@
             "open",
             "lookAlike"
           ]
+        }
+      },
+      {
+        "id": "cut_list",
+        "class": "read_only",
+        "timeout_ms": 50000,
+        "concurrency": "serial",
+        "summary": "The model's cut list as Markdown, CSV, JSON or a printable HTML page, with cutting plans for sheets and bars (PackingSolver).",
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "includeHidden": {
+              "type": "boolean"
+            },
+            "autoOrient": {
+              "type": "boolean",
+              "description": "longest extent first (default true)"
+            },
+            "types": {
+              "type": "object",
+              "description": "material name → type, for materials the model doesn't type",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "md",
+                "csv",
+                "json",
+                "html"
+              ],
+              "description": "md (default); html always has the cutting plans"
+            },
+            "plan": {
+              "type": "boolean",
+              "description": "add the cutting plans to md and json"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "stock": {
+              "type": "object",
+              "description": "material name → entry: {kind: sheet|bar|list, sheets?, bars?, kerf?, trim?, grain?, preset?}",
+              "additionalProperties": {
+                "type": "object"
+              }
+            },
+            "sep": {
+              "type": "string",
+              "maxLength": 1
+            },
+            "decimal": {
+              "type": "string",
+              "maxLength": 1
+            }
+          }
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "text",
+            "summary"
+          ],
+          "properties": {
+            "format": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "summary": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "parts": {
+                  "type": "integer"
+                },
+                "rows": {
+                  "type": "integer"
+                },
+                "glueUps": {
+                  "type": "integer"
+                },
+                "open": {
+                  "type": "integer"
+                },
+                "sheets": {
+                  "type": "integer"
+                },
+                "bars": {
+                  "type": "integer"
+                },
+                "guessed": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "get_stock",
+        "class": "read_only",
+        "summary": "The stock TinyCutList keeps for cutting plans: material name → sheets or bars.",
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stock"
+          ],
+          "properties": {
+            "stock": {
+              "type": "object",
+              "description": "material name → entry: {kind: sheet|bar|list, sheets?, bars?, kerf?, trim?, grain?, preset?}",
+              "additionalProperties": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "set_stock",
+        "class": "read_only",
+        "summary": "Sets entries of the stock TinyCutList keeps (merged into it, unless merge is false). Changes the plugin's own data, never the model.",
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stock"
+          ],
+          "properties": {
+            "stock": {
+              "type": "object",
+              "description": "material name → entry: {kind: sheet|bar|list, sheets?, bars?, kerf?, trim?, grain?, preset?}",
+              "additionalProperties": {
+                "type": "object"
+              }
+            },
+            "merge": {
+              "type": "boolean"
+            }
+          }
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stock"
+          ],
+          "properties": {
+            "stock": {
+              "type": "object",
+              "description": "material name → entry: {kind: sheet|bar|list, sheets?, bars?, kerf?, trim?, grain?, preset?}",
+              "additionalProperties": {
+                "type": "object"
+              }
+            }
+          }
         }
       }
     ],

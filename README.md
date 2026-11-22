@@ -4,7 +4,10 @@
 
 Cut lists and cutting diagrams for [Hew](https://hew3d.com), as a plugin written in TypeScript on Hew's plugin API.
 
-**Status: early.** Hew runs plugins from its milestone 3 on. Until then TinyCutList runs as a command line tool on `hew-cli`, Hew's command-line bus: it prints a model's parts list (Markdown, CSV or JSON) and makes a printable page with the cutting plans for sheets and bars.
+**Status: early.** TinyCutList runs two ways:
+
+- **Inside Hew**, as a plugin, from Hew `1.5.0-pre.2` on (a preview: plugins are behind Settings > Preview, and installed from a folder in developer mode). Hew has no plugin windows yet, so the plugin answers bus commands, which an agent or `hew-cli` calls: see [Inside Hew](#inside-hew).
+- **As a command line tool** on `hew-cli`, Hew's command-line bus: it prints a model's parts list (Markdown, CSV or JSON) and makes a printable page with the cutting plans for sheets and bars.
 
 ## Where it comes from
 
@@ -18,14 +21,16 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 
 | Path | What |
 |---|---|
-| `hew-plugin.json` | The plugin manifest (Hew's format, `docs/agents/PLUGINS.md` in Hew). Draft: Hew can't load plugins before M3. |
-| `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. From M3, a host over the SDK joins them. |
+| `hew-plugin.json` | The plugin manifest (Hew's format, `docs/agents/PLUGINS.md` in Hew). `npm run plugin:build` copies it into the package. |
+| `src/host/` | The only door to Hew. `Host` is the interface (`query`, `transact`). `HewCliHost` drives `hew-cli mcp` for development, while `RecordingHost` and `ReplayHost` record Hew's answers and replay them in tests. `SdkHost` (`sdk.ts`) is the one inside Hew, over the plugin SDK's `hew.api`, keeping under Hew's 1,000 messages a second. |
 | `src/model.ts` | What `hew.query.occurrences` reports, as the plugin reads it. |
 | `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. Cutting plans: stock (`stock.ts`), standard sheet sizes (`presets.ts`), nesting with PackingSolver (`nesting.ts`), drawings (`svg.ts`) and the printable page (`html.ts`). |
 | `src/solver.ts`, `solver/` | PackingSolver as a single-threaded WebAssembly module: the CMake project that builds it, and the manifest of the released build. |
 | `src/cli.ts` | The `tinycutlist` command: a file or the open document, out as Markdown, CSV, JSON or a page with the cutting plans. |
 | `src/support.ts` | The Ko-fi link, for every surface that shows it: the printable page now, the plugin window from M3. Drawn as a plain link, without Ko-fi's script, so the page stays self-contained. |
-| `src/background.ts` | The plugin's entry: its bus commands as plain handlers over a `Host`, to be registered through the SDK in M3. |
+| `src/background.ts` | The plugin's bus commands as plain handlers over a `Host`, shared by the plugin and the tests. |
+| `src/plugin/` | The plugin inside Hew: `main.ts` registers the commands with the SDK; `solver.ts` runs PackingSolver in a nested Worker, handed the compiled module; `solver-worker.js` and `embind-invoker.js` go into the package's `solver/worker.js`. |
+| `tools/plugin-build.ts` | Builds the package Hew installs, in `dist/plugin/`. |
 | `test/scenes.ts` | Synthetic models, each with the cut list the rule must give. |
 | `tests/acceptance/linked-copies/` | The acceptance test for Hew's linked copies (milestone 2), run against a real build. |
 | `docs/concept-mapping.md` | The record of how OpenCutList's concepts map onto Hew's data model, as discussed up to 12 November 2026. |
@@ -101,6 +106,36 @@ Presets, with their full-sheet sizes in mm:
 | `panel-hardwood` | 3000 × 1200, 4500 × 1220 | yes |
 
 **The solver** is PackingSolver's own JavaScript API (`wasm/` in its repository) built without threads (`solver/CMakeLists.txt`), so it runs in any Worker, without cross-origin isolation, as a Hew plugin needs. It runs one optimization at a time, in "not-anytime-sequential" mode. `npm run solver:fetch` downloads the build named in `solver/manifest.json` from this repository's releases and checks its SHA-256; `npm run solver:build` builds it from source with Emscripten (set `EMSDK`). `TINYCUTLIST_SOLVER` points at another folder.
+
+## Inside Hew
+
+```sh
+npm run solver:fetch
+npm run plugin:build        # → dist/plugin/
+```
+
+In Hew `1.5.0-pre.2` or later: turn on Plugins in Settings > Preview and restart, turn on developer mode in Settings > Plugins, then install the folder `dist/plugin` (or run `hew-cli plugin dev dist/plugin --live` and choose it in Hew). The plugin asks only for `model.read`.
+
+Its commands, on Hew's bus as `io.github.tinyworkshopdesign.tinycutlist.<id>`:
+
+| Command | What |
+|---|---|
+| `cut_list` | The cut list as `md` (default), `csv`, `json` or `html` (the printable page), with the cutting plans (`plan: true`, always in `html`). Answers `{format, text, summary}`. |
+| `count_parts` | The parts list as data. |
+| `get_stock`, `set_stock` | The sheets and bars the cutting plans use, kept in the plugin's own storage: what `~/.config/tinycutlist/stock.json` is for the command line. |
+
+For example, from a terminal, against the document open in Hew:
+
+```sh
+printf '%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"hew.meta.hello","params":{"protocol":1}}' \
+  '{"jsonrpc":"2.0","id":2,"method":"hew.doc.attach","params":{}}' \
+  '{"jsonrpc":"2.0","id":3,"method":"io.github.tinyworkshopdesign.tinycutlist.cut_list","params":{"format":"md","plan":true}}' \
+  > cutlist.jsonl
+hew-cli run cutlist.jsonl --live
+```
+
+Two things the package does that the command line doesn't need. Hew's plugin Worker allows no `eval`, and embind (PackingSolver's bindings) builds its call wrappers with the Function constructor, so the build puts `src/plugin/embind-invoker.js` in place of that one function. And Hew stops a plugin that sends more than 1,000 messages a second, which a large model's reads would, so `SdkHost` keeps to 800.
 
 ## Running
 
