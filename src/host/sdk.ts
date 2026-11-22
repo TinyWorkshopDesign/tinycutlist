@@ -3,7 +3,7 @@
 // postMessage to Hew's page and back, through the plugin's own connection
 // and grant; nothing here reaches hew-cli or a socket.
 
-import { HostError, type Command, type Host } from "./host.ts";
+import { HostError, readInTransactions, type Command, type Host, type Query, type ReadAnswer, type TransactOptions } from "./host.ts";
 
 /** The part of the SDK's `hew` this host uses. */
 export type SdkHew = {
@@ -48,7 +48,8 @@ const camel = (snake: string) => snake.replace(/_([a-z0-9])/g, (_, c: string) =>
 /** The SDK's error as a HostError: a refusal keeps its name (`locator_missed`, …). */
 function toHostError(e: any): HostError {
   const r = e?.refusal;
-  if (r && typeof r.refusal === "string") return new HostError(r.explanation || e.message, r.refusal);
+  if (r && typeof r.refusal === "string")
+    return new HostError(r.explanation || e.message, r.refusal, typeof r.failed_index === "number" ? r.failed_index : null);
   return new HostError(e?.message ?? String(e));
 }
 
@@ -80,7 +81,12 @@ export class SdkHost implements Host {
     }
   }
 
-  async transact(commands: Command[], options: { label?: string; dry_run?: boolean } = {}): Promise<any[]> {
+  /** Reads in dry-run transactions: one message each way for many reads, so far under Hew's rate. */
+  read(queries: Query[], generation?: number): Promise<ReadAnswer[]> {
+    return readInTransactions(this, queries, generation);
+  }
+
+  async transact(commands: Command[], options: TransactOptions = {}): Promise<any[]> {
     const fn = this.method("hew.doc.transact");
     await this.limit.take();
     try {

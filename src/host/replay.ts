@@ -3,7 +3,7 @@
 // then replay them in unit tests. Only queries are recorded: the code under
 // test reads the model, it never writes.
 
-import { HostError, type Command, type Host } from "./host.ts";
+import { HostError, readOneByOne, type Command, type Host, type Query, type ReadAnswer, type TransactOptions } from "./host.ts";
 
 export type Exchange = { method: string; params: Record<string, unknown>; result?: unknown; refusal?: string };
 export type Recording = { hew: string; note?: string; exchanges: Exchange[] };
@@ -33,8 +33,20 @@ export class RecordingHost implements Host {
     }
   }
 
-  transact(commands: Command[], options?: { label?: string; dry_run?: boolean }): Promise<any[]> {
+  transact(commands: Command[], options?: TransactOptions): Promise<any[]> {
     return this.inner.transact(commands, options);
+  }
+
+  /** Reads through the inner host (batched), recorded one exchange per query, as replay answers them. */
+  async read(queries: Query[], generation?: number): Promise<ReadAnswer[]> {
+    const answers = await this.inner.read(queries, generation);
+    queries.forEach((q, i) => {
+      const a = answers[i];
+      const params = q.params ?? {};
+      if (a.ok) this.exchanges.push({ method: q.method, params, result: a.result });
+      else if (a.error.refusal) this.exchanges.push({ method: q.method, params, refusal: a.error.refusal });
+    });
+    return answers;
   }
 }
 
@@ -52,7 +64,11 @@ export class ReplayHost implements Host {
     return structuredClone(x.result) as T;
   }
 
-  async transact(_commands: Command[], _options?: { label?: string; dry_run?: boolean }): Promise<any[]> {
+  async transact(_commands: Command[], _options?: TransactOptions): Promise<any[]> {
     throw new Error("ReplayHost is read-only");
+  }
+
+  read(queries: Query[]): Promise<ReadAnswer[]> {
+    return readOneByOne(this, queries);
   }
 }

@@ -14,7 +14,7 @@
 //     still separate parts, one per board, and are also listed as a glue-up,
 //     so the grain of the boards can be matched before gluing.
 
-import type { Host } from "../host/host.ts";
+import { resultOf, type Host, type Query } from "../host/host.ts";
 import { locator, locatorKey, type Occurrence } from "../model.ts";
 import { TYPE_ORDER, VIRTUAL, readMaterials, type MaterialType } from "./materials.ts";
 import { findGlueUps, type Box, type Frame } from "./glue.ts";
@@ -112,16 +112,20 @@ export const thicknessNote = (p: Pick<Part, "thicknessMismatch" | "material">): 
 
 export async function countParts(host: Host, opts: CountOptions = {}): Promise<CutList> {
   const { includeHidden = false, autoOrient = true } = opts;
-  const rows: Occurrence[] = (await host.query("hew.query.occurrences", { include_hidden: includeHidden })).occurrences;
-  const materials = await readMaterials(host, opts.types);
+  const listing = await host.query("hew.query.occurrences", { include_hidden: includeHidden });
+  const rows: Occurrence[] = listing.occurrences;
+  // every read after the listing is of the same state of the model, or refused
+  const generation: number | undefined = typeof listing.generation === "number" ? listing.generation : undefined;
+  const materials = await readMaterials(host, opts.types, generation);
   const byLoc = new Map<string, Occurrence>(rows.map((r) => [locatorKey(locator(r)), r]));
 
   // Hew's own rule, as the user sees it: the solid's base material, else its faces' effective
   // materials (painted faces, then the nearest painted placement), edges and veneers left out
-  async function partMaterial(o: Occurrence, loc: string[]): Promise<string | null> {
-    if (o.material && !VIRTUAL.has(materials.type(o.material))) return o.material;
+  const hasBaseMaterial = (o: Occurrence) => !!o.material && !VIRTUAL.has(materials.type(o.material));
+  function partMaterial(o: Occurrence, faces: any[] | null): string | null {
+    if (hasBaseMaterial(o)) return o.material;
     const votes = new Map<string, number>();
-    for (const f of (await host.query("hew.query.faces", { path: loc })).faces) {
+    for (const f of faces ?? []) {
       const m = f.material_effective ?? f.material ?? null;
       if (m && !VIRTUAL.has(materials.type(m))) votes.set(m, (votes.get(m) ?? 0) + 1);
     }
@@ -143,6 +147,25 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
   const shapes = new Map<string, string>(); // part key → shape hash
   const placements: Placement[] = [];
 
+  // what each closed solid needs read: its signature and part frame, and its faces when
+  // the solid has no base material; all of it in a few round trips
+  const solids = rows.filter((o) => o.kind === "object" && o.solid);
+  const queries: Query[] = [];
+  const slots = solids.map((o) => {
+    const path = locator(o);
+    const at = queries.length;
+    queries.push({ method: "hew.query.signature", params: { path } });
+    // part_frame honours a frame the user set on the solid (grain direction); the signature's doesn't
+    queries.push({ method: "hew.query.part_frame", params: { path } });
+    if (!hasBaseMaterial(o)) queries.push({ method: "hew.query.faces", params: { path } });
+    return at;
+  });
+  const answers = await host.read(queries, generation);
+  const read = new Map(solids.map((o, i) => {
+    const at = slots[i];
+    return [o, { sig: resultOf(answers[at]), pf: resultOf(answers[at + 1]), faces: hasBaseMaterial(o) ? null : resultOf(answers[at + 2]).faces }];
+  }));
+
   for (const o of rows) {
     if (o.kind !== "object") continue;
     if (o.solid === undefined) throw new Error(`row ${o.id} has no \`solid\` field: this needs Hew M2 or later`);
@@ -155,13 +178,11 @@ export async function countParts(host: Host, opts: CountOptions = {}): Promise<C
       continue;
     }
     const loc = locator(o);
-    const sig = await host.query("hew.query.signature", { path: loc });
-    // part_frame honours a frame the user set on the solid (grain direction); the signature's doesn't
-    const pf = await host.query("hew.query.part_frame", { path: loc });
+    const { sig, pf, faces } = read.get(o)!;
     // a layered material with a grain (hew#134): extents come length along the grain first
     const grain = pf.source === "material";
     const size = oriented(pf.extents, grain);
-    const material = await partMaterial(o, loc);
+    const material = partMaterial(o, faces);
     const mirrored = o.mirrored && !sig.symmetric;
     const k = JSON.stringify([o.id, material, size, mirrored, grain]);
     let p = parts.get(k);
