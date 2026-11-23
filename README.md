@@ -27,6 +27,7 @@ The plugin system it runs on is designed by Kurt Granroth in [hew3d/hew#60](http
 | `src/cutlist/` | The counting rule (`count.ts`), glue-ups (`glue.ts`), material types (`materials.ts`), Markdown (`format.ts`) and CSV (`csv.ts`) output. Cutting plans: stock (`stock.ts`), standard sheet sizes (`presets.ts`), nesting with PackingSolver (`nesting.ts`), drawings (`svg.ts`) and the printable page (`html.ts`). |
 | `src/solver.ts`, `solver/` | PackingSolver as a single-threaded WebAssembly module: the CMake project that builds it, and the manifest of the released build. |
 | `src/cli.ts` | The `tinycutlist` command: a file or the open document, out as Markdown, CSV, JSON or a page with the cutting plans. |
+| `src/ui/`, `src/serve.ts` | The window (prototype): parts list, stock, cutting plans and exports, in plain DOM (`app.ts`, `index.html`). It talks only through a `Bridge` (`protocol.ts`): today `tinycutlist serve` answers it over HTTP (`bridge-http.ts`, `serve.ts`); from M3 the plugin's background will answer the same commands to its own window. |
 | `src/support.ts` | The Ko-fi link, for every surface that shows it: the printable page now, the plugin window from M3. Drawn as a plain link, without Ko-fi's script, so the page stays self-contained. |
 | `src/background.ts` | The plugin's bus commands as plain handlers over a `Host`, shared by the plugin and the tests. |
 | `src/plugin/` | The plugin inside Hew: `main.ts` registers the commands with the SDK; `solver.ts` runs PackingSolver in a nested Worker, handed the compiled module; `solver-worker.js` and `embind-invoker.js` go into the package's `solver/worker.js`. |
@@ -55,6 +56,23 @@ tinycutlist --live --document "Cabinet.hew"  # another open window
 It only reads: a file opens in a private Hew session and is never written back, and `--live` only queries the app's document. It needs `hew-cli`, which ships inside Hew: set `HEW_CLI` to its path if it isn't on the `PATH` (on macOS, `Hew.app` in `/Applications` is found by itself). `tinycutlist --help` lists every option.
 
 Until it's published, run it from a clone with `node src/cli.ts …` (or `npm run cutlist -- …`), or `npm link` it once to get the `tinycutlist` command.
+
+## The window (prototype)
+
+```sh
+tinycutlist serve --live                     # the document open in Hew, on http://127.0.0.1:8790
+tinycutlist serve model.skp                  # a model file, opened privately
+tinycutlist serve --live --port 8795 --stock project-stock.json
+```
+
+Hew has no plugin windows yet (they come with M3's second stop), so the window runs in a browser for now, served on this computer only (127.0.0.1; requests from other sites are refused). It has four tabs:
+
+- **Parts**: the parts list by material and thickness, with a filter, the glue-ups, look-alikes and the objects that aren't closed. With `--live`, **Show** selects the part in Hew and frames it. A part inside an unevenly scaled component Hew can't open selects that component instead.
+- **Stock**: each material's sheets or bars, starting from a guess. Pick a preset or type the sizes, kerf, trim and grain, then save: it goes to the global stock file (or `--stock`'s) and the plans are redone.
+- **Cutting plans**: every sheet and bar, drawn to scale. Click one to see it large, with the parts on it.
+- **Export**: CSV (also for comma-decimal spreadsheets), the printable page, Markdown and JSON.
+
+`--live` only reads the document, except that **Show** changes Hew's selection and view. The window is built from `src/ui/` when the server starts, with esbuild (a dev dependency: run `npm install` first).
 
 ## Cutting plans
 

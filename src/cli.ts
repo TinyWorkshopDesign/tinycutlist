@@ -3,11 +3,11 @@
 // Reads only: a file opens in a private session and is never written back,
 // and --live only queries the document open in the app.
 
-import { execFileSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { HewCliHost, hewCliPath } from "./host/hew-cli.ts";
+import { HewCliHost } from "./host/hew-cli.ts";
+import { liveTitle } from "./live-title.ts";
 import { KOFI } from "./support.ts";
 import { countParts, type CutList } from "./cutlist/count.ts";
 import { render, type Format } from "./cutlist/render.ts";
@@ -21,6 +21,7 @@ USAGE
     tinycutlist <model.hew | model.skp> [options]
     tinycutlist --live [--document <ref>] [options]
     tinycutlist stock <model.hew | model.skp | --live> [--stock <file>]
+    tinycutlist serve <model.hew | model.skp | --live> [--port 8790]   the window, in your browser
 
     A file opens in a private session and is never written back.
     --live reads the document open in the Hew app, without changing it.
@@ -57,21 +58,14 @@ function fail(message: string, code = 1): never {
   process.exit(code);
 }
 
-/** The live document's title, as `hew-cli documents --live` lists it (front window unless `ref` names one). */
-function liveTitle(ref?: string): string | null {
-  try {
-    const docs = execFileSync(hewCliPath(), ["documents", "--live"], { encoding: "utf8", timeout: 10000 })
-      .split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l));
-    const d = docs.find((x: any) => (ref ? [x.id, x.path, x.title].includes(ref) : x.front));
-    return d?.title ?? null;
-  } catch {
-    return null;
-  }
-}
 
 const n = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 
 async function main() {
+  if (process.argv[2] === "serve") {
+    const { serve } = await import("./serve.ts");
+    return serve(process.argv.slice(3)).catch((e) => fail(e.message));
+  }
   let parsed;
   try {
     parsed = parseArgs({
