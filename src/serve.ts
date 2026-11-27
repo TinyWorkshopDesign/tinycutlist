@@ -134,11 +134,11 @@ export async function serve(argv: string[]): Promise<void> {
         const leaf = path[path.length - 1];
         if (path.length > 1) {
           // a part inside components: open the window down to it, which selects it.
-          // Hew answers {} even when it can't open one (an unevenly scaled instance),
-          // so check where the window is before trusting it.
+          // An unevenly scaled instance opens in context, not as a session: `stack`
+          // stays empty and the entry is in `fallback` (hew3d/hew#60, pre.4).
           await h.transact([{ method: "hew.view.enter", params: { path } }]).catch(() => {});
           const ctx = await h.query("hew.query.context", {});
-          if (ctx.stack?.length) {
+          if (ctx.stack?.length || ctx.fallback?.length) {
             await h.query("hew.view.zoom_to", { ids: [leaf] }).catch(() => {});
             return { shown: 1, how: "part" };
           }
